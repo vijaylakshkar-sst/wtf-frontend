@@ -1,5 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { LockIcon, MailIcon } from "@/components/icons";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: "Sign in to your WTF? account.",
+  robots: { index: false, follow: false },
+};
 
 export default function SignInPage() {
   return (
