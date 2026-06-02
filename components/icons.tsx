@@ -1,0 +1,16 @@
+type IconProps = { size?: number; className?: string };
+const Svg = ({size=20,className,children}:IconProps&{children:React.ReactNode}) => <svg aria-hidden="true" className={className} fill="none" height={size} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" viewBox="0 0 24 24" width={size}>{children}</svg>;
+export const HomeIcon=(p:IconProps)=><Svg {...p}><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></Svg>;
+export const BoxIcon=(p:IconProps)=><Svg {...p}><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></Svg>;
+export const UsersIcon=(p:IconProps)=><Svg {...p}><path d="M16 20v-1.5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4V20"/><circle cx="9" cy="7" r="3"/><path d="M22 20v-1.5a4 4 0 0 0-3-3.87M16 4.13a3 3 0 0 1 0 5.74"/></Svg>;
+export const PaletteIcon=(p:IconProps)=><Svg {...p}><path d="M13.5 3a9 9 0 1 0 0 18h1.2a2.3 2.3 0 0 0 0-4.6H14a1.5 1.5 0 0 1 0-3h2.5A5.5 5.5 0 0 0 22 7.9C22 5.2 18.2 3 13.5 3Z"/><path d="M7.5 10h.01M9.5 6.5h.01M14 6h.01M18 8h.01"/></Svg>;
+export const ShieldIcon=(p:IconProps)=><Svg {...p}><path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></Svg>;
+export const LockIcon=(p:IconProps)=><Svg {...p}><rect height="12" rx="2" width="16" x="4" y="9"/><path d="M8 9V6a4 4 0 0 1 8 0v3M12 14v2"/></Svg>;
+export const MailIcon=(p:IconProps)=><Svg {...p}><rect height="14" rx="2" width="18" x="3" y="5"/><path d="m3 7 9 6 9-6"/></Svg>;
+export const ClockIcon=(p:IconProps)=><Svg {...p}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></Svg>;
+export const ChartIcon=(p:IconProps)=><Svg {...p}><path d="M4 20v-7M9 20V8M14 20v-4M19 20V4"/><path d="m3 8 5-4 5 3 7-5"/></Svg>;
+export const ArrowIcon=(p:IconProps)=><Svg {...p}><path d="M5 12h14M15 8l4 4-4 4"/></Svg>;
+export const StarIcon=(p:IconProps)=><Svg {...p}><path d="m12 3 2.2 4.8L19 10l-4.8 2.2L12 17l-2.2-4.8L5 10l4.8-2.2Z"/></Svg>;
+export const MenuIcon=(p:IconProps)=><Svg {...p}><path d="M4 7h16M4 12h16M4 17h16"/></Svg>;
+export const SearchIcon=(p:IconProps)=><Svg {...p}><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></Svg>;
+export const BellIcon=(p:IconProps)=><Svg {...p}><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M14 21h-4"/></Svg>;
