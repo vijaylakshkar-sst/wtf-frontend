@@ -14,3 +14,16 @@ export const StarIcon=(p:IconProps)=><Svg {...p}><path d="m12 3 2.2 4.8L19 10l-4
 export const MenuIcon=(p:IconProps)=><Svg {...p}><path d="M4 7h16M4 12h16M4 17h16"/></Svg>;
 export const SearchIcon=(p:IconProps)=><Svg {...p}><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></Svg>;
 export const BellIcon=(p:IconProps)=><Svg {...p}><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M14 21h-4"/></Svg>;
+export const BookmarkIcon=(p:IconProps)=><Svg {...p}><path d="M6 4h12v17l-6-4-6 4Z"/></Svg>;
+export const ClipboardIcon=(p:IconProps)=><Svg {...p}><rect height="17" rx="2" width="14" x="5" y="4"/><path d="M9 4V2h6v2M9 9h6M9 13h6"/></Svg>;
+export const GearIcon=(p:IconProps)=><Svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a2 2 0 0 0 .4 2.2l.1.1-2.6 2.6-.1-.1a2 2 0 0 0-2.2-.4 2 2 0 0 0-1.2 1.8v.2h-3.6v-.2A2 2 0 0 0 9 19.4a2 2 0 0 0-2.2.4l-.1.1-2.6-2.6.1-.1A2 2 0 0 0 4.6 15a2 2 0 0 0-1.8-1.2h-.2v-3.6h.2A2 2 0 0 0 4.6 9a2 2 0 0 0-.4-2.2l-.1-.1 2.6-2.6.1.1A2 2 0 0 0 9 4.6a2 2 0 0 0 1.2-1.8v-.2h3.6v.2A2 2 0 0 0 15 4.6a2 2 0 0 0 2.2-.4l.1-.1 2.6 2.6-.1.1a2 2 0 0 0-.4 2.2 2 2 0 0 0 1.8 1.2h.2v3.6h-.2A2 2 0 0 0 19.4 15Z"/></Svg>;
+export const GridIcon=(p:IconProps)=><Svg {...p}><rect height="7" width="7" x="3" y="3"/><rect height="7" width="7" x="14" y="3"/><rect height="7" width="7" x="3" y="14"/><rect height="7" width="7" x="14" y="14"/></Svg>;
+export const KeyIcon=(p:IconProps)=><Svg {...p}><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M15 8l3 3M17 6l3 3"/></Svg>;
+export const LogoutIcon=(p:IconProps)=><Svg {...p}><path d="M10 17l5-5-5-5M15 12H3M21 19V5a2 2 0 0 0-2-2h-6"/></Svg>;
+export const PlusIcon=(p:IconProps)=><Svg {...p}><path d="M12 5v14M5 12h14"/></Svg>;
+export const UserIcon=(p:IconProps)=><Svg {...p}><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></Svg>;
+export const EditIcon=(p:IconProps)=><Svg {...p}><path d="m14 4 6 6M4 20l4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11Z"/></Svg>;
+export const EyeIcon=(p:IconProps)=><Svg {...p}><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></Svg>;
+export const FilterIcon=(p:IconProps)=><Svg {...p}><path d="M4 5h16l-6 7v6l-4 2v-8Z"/></Svg>;
+export const MapPinIcon=(p:IconProps)=><Svg {...p}><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></Svg>;
+export const MoreIcon=(p:IconProps)=><Svg {...p}><circle cx="5" cy="12" r=".7" fill="currentColor"/><circle cx="12" cy="12" r=".7" fill="currentColor"/><circle cx="19" cy="12" r=".7" fill="currentColor"/></Svg>;

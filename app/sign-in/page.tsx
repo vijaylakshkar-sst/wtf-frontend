@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { LockIcon, MailIcon } from "@/components/icons";
+import { SignInForm } from "@/components/sign-in-form";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -18,30 +18,7 @@ export default function SignInPage() {
         </header>
         <h1 id="sign-in-title">Welcome back</h1>
         <p className="auth-subtitle">Sign in to your account to continue</p>
-        <form>
-          <label>
-            Email address
-            <span className="auth-input">
-              <MailIcon size={17} />
-              <input placeholder="Enter your email address" type="email" />
-            </span>
-          </label>
-          <label>
-            <span className="auth-label-row">
-              <span>Password</span>
-              <a href="#">Forgot password?</a>
-            </span>
-            <span className="auth-input">
-              <LockIcon size={17} />
-              <input placeholder="Enter your password" type="password" />
-            </span>
-          </label>
-          <label className="auth-remember">
-            <input type="checkbox" />
-            Remember me
-          </label>
-          <button className="auth-submit" type="submit"><LockIcon size={17} /> Sign in</button>
-        </form>
+        <SignInForm />
       </section>
     </main>
   );
