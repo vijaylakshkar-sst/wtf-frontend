@@ -1,5 +1,6 @@
-import { BoxIcon, FilterIcon, HomeIcon, PlusIcon, SearchIcon, UsersIcon } from "@/components/icons";
+import { BoxIcon, FilterIcon, HomeIcon, SearchIcon, UsersIcon } from "@/components/icons";
 import { BuilderShell } from "@/components/builder/builder-shell";
+import { CreateDisplayHomeButton } from "@/components/builder/display-homes/create-display-home-button";
 import { displayHomes, homeActivity, homeStats } from "@/components/builder/display-homes/data";
 import { HomeCard } from "@/components/builder/display-homes/home-card";
 
@@ -14,7 +15,7 @@ export function DisplayHomesPage() {
           <div className="display-home-tools">
             <label><SearchIcon size={17} /><input placeholder="Search display homes..." /></label>
             <button className="status-filter"><FilterIcon size={15} /> All status <span>&#8964;</span></button>
-            <button className="builder-primary"><PlusIcon size={18} /> Create display home</button>
+            <CreateDisplayHomeButton />
           </div>
         </header>
         <section className="home-stats" aria-label="Display home statistics">

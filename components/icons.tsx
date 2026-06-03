@@ -12,6 +12,8 @@ export const ChartIcon=(p:IconProps)=><Svg {...p}><path d="M4 20v-7M9 20V8M14 20
 export const ArrowIcon=(p:IconProps)=><Svg {...p}><path d="M5 12h14M15 8l4 4-4 4"/></Svg>;
 export const StarIcon=(p:IconProps)=><Svg {...p}><path d="m12 3 2.2 4.8L19 10l-4.8 2.2L12 17l-2.2-4.8L5 10l4.8-2.2Z"/></Svg>;
 export const MenuIcon=(p:IconProps)=><Svg {...p}><path d="M4 7h16M4 12h16M4 17h16"/></Svg>;
+export const MaximizeIcon=(p:IconProps)=><Svg {...p}><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/><path d="M3 3l6 6M21 3l-6 6M21 21l-6-6M3 21l6-6"/></Svg>;
+export const MinimizeIcon=(p:IconProps)=><Svg {...p}><path d="M9 3v6H3M15 3v6h6M21 15h-6v6M3 15h6v6"/><path d="M3 9l6-6M21 9l-6-6M15 21l6-6M9 21l-6-6"/></Svg>;
 export const SearchIcon=(p:IconProps)=><Svg {...p}><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></Svg>;
 export const BellIcon=(p:IconProps)=><Svg {...p}><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M14 21h-4"/></Svg>;
 export const BookmarkIcon=(p:IconProps)=><Svg {...p}><path d="M6 4h12v17l-6-4-6 4Z"/></Svg>;
@@ -27,3 +29,19 @@ export const EyeIcon=(p:IconProps)=><Svg {...p}><path d="M2 12s3.5-6 10-6 10 6 1
 export const FilterIcon=(p:IconProps)=><Svg {...p}><path d="M4 5h16l-6 7v6l-4 2v-8Z"/></Svg>;
 export const MapPinIcon=(p:IconProps)=><Svg {...p}><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></Svg>;
 export const MoreIcon=(p:IconProps)=><Svg {...p}><circle cx="5" cy="12" r=".7" fill="currentColor"/><circle cx="12" cy="12" r=".7" fill="currentColor"/><circle cx="19" cy="12" r=".7" fill="currentColor"/></Svg>;
+export const PhoneIcon=(p:IconProps)=><Svg {...p}><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></Svg>;
+export const FileIcon=(p:IconProps)=><Svg {...p}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5M9 13h6M9 17h4"/></Svg>;
+export const BookOpenIcon=(p:IconProps)=><Svg {...p}><path d="M12 7v15M4 4h5a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H4Z"/><path d="M20 4h-5a3 3 0 0 0-3 3v15a3 3 0 0 1 3-3h5Z"/></Svg>;
+export const CameraIcon=(p:IconProps)=><Svg {...p}><path d="M14.5 4 13 6H8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3l-1.5-2Z"/><circle cx="14" cy="13" r="3"/></Svg>;
+export const UploadIcon=(p:IconProps)=><Svg {...p}><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></Svg>;
+export const SparklesIcon=(p:IconProps)=><Svg {...p}><path d="m12 3 1.7 3.8L17.5 8l-3.8 1.7L12 13.5 10.3 9.7 6.5 8l3.8-1.2Z"/><path d="m5 13 .9 2.1L8 16l-2.1.9L5 19l-.9-2.1L2 16l2.1-.9ZM19 14l.7 1.6L21.5 16l-1.8.7L19 18.5l-.7-1.8-1.8-.7 1.8-.4Z"/></Svg>;
+export const BedIcon=(p:IconProps)=><Svg {...p}><path d="M4 11V5M20 14v-3a3 3 0 0 0-3-3H4v9"/><path d="M4 14h16M8 8v3M4 19v-2M20 19v-2"/></Svg>;
+export const UtensilsIcon=(p:IconProps)=><Svg {...p}><path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v19"/><path d="M15 3v8h4V3M19 11v11"/></Svg>;
+export const SofaIcon=(p:IconProps)=><Svg {...p}><path d="M7 13V9a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v4"/><path d="M5 13a2 2 0 0 0-2 2v4h18v-4a2 2 0 0 0-2-2Z"/><path d="M7 19v2M17 19v2"/></Svg>;
+export const TrashIcon=(p:IconProps)=><Svg {...p}><path d="M3 6h18M8 6V4h8v2M6 6l1 16h10l1-16"/><path d="M10 11v6M14 11v6"/></Svg>;
+export const FlagIcon=(p:IconProps)=><Svg {...p}><path d="M5 22V4"/><path d="M5 4h12l-1.5 4L17 12H5"/></Svg>;
+export const CheckIcon=(p:IconProps)=><Svg {...p}><path d="m5 12 5 5L20 7"/></Svg>;
+export const PrintIcon=(p:IconProps)=><Svg {...p}><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v8H7Z"/></Svg>;
+export const ListIcon=(p:IconProps)=><Svg {...p}><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></Svg>;
+export const XIcon=(p:IconProps)=><Svg {...p}><path d="M18 6 6 18M6 6l12 12"/></Svg>;
+export const TagIcon=(p:IconProps)=><Svg {...p}><path d="M20 13 13 20 4 11V4h7l9 9Z"/><path d="M8 8h.01"/></Svg>;
