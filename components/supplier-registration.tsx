@@ -33,6 +33,13 @@ const FormSection = ({ icon, title, children }: { icon: React.ReactNode; title: 
   </section>
 );
 
+const ContactRow = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div className="supplier-contact-card wide">
+    <h3>{title}</h3>
+    <div className="supplier-contact-row">{children}</div>
+  </div>
+);
+
 export function SupplierRegistration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -83,10 +90,26 @@ export function SupplierRegistration() {
           </FormSection>
 
           <FormSection icon={<UsersIcon />} title="Contact information">
-            <Field label="Primary contact" placeholder="Name, role, email, phone" />
-            <Field label="Sales contact" placeholder="Name, email, phone" />
-            <Field label="Marketing contact" placeholder="Name, email, phone" />
-            <Field label="Product support contact" placeholder="Name, email, phone" />
+            <ContactRow title="Primary contact">
+              <Field label="Name" placeholder="Jane Smith" />
+              <Field label="Email" placeholder="jane@company.com.au" />
+              <Field label="Phone" placeholder="+61 4XX XXX XXX" />
+            </ContactRow>
+            <ContactRow title="Sales contact">
+              <Field label="Name" placeholder="Alex Lee" />
+              <Field label="Email" placeholder="sales@company.com.au" />
+              <Field label="Phone" placeholder="+61 4XX XXX XXX" />
+            </ContactRow>
+            <ContactRow title="Marketing contact">
+              <Field label="Name" placeholder="Sam Taylor" />
+              <Field label="Email" placeholder="marketing@company.com.au" />
+              <Field label="Phone" placeholder="+61 4XX XXX XXX" />
+            </ContactRow>
+            <ContactRow title="Product support contact">
+              <Field label="Name" placeholder="Chris Morgan" />
+              <Field label="Email" placeholder="support@company.com.au" />
+              <Field label="Phone" placeholder="+61 4XX XXX XXX" />
+            </ContactRow>
           </FormSection>
 
           <FormSection icon={<MapPinIcon />} title="Supplier coverage">
