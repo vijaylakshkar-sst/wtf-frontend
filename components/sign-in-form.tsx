@@ -15,16 +15,24 @@ export function SignInForm() {
           <input autoComplete="email" placeholder="Enter your email address" required type="email" />
         </span>
       </label>
-      <label>
+      <div className="auth-field">
         <span className="auth-label-row">
           <span>Password</span>
-          <a href="#">Forgot password?</a>
+          <button
+            className="auth-link-button"
+            onClick={() => {
+              router.push("/forgot-password");
+            }}
+            type="button"
+          >
+            Forgot password?
+          </button>
         </span>
-        <span className="auth-input">
+        <label className="auth-input">
           <LockIcon size={17} />
           <input autoComplete="current-password" placeholder="Enter your password" required type="password" />
-        </span>
-      </label>
+        </label>
+      </div>
       <label className="auth-remember">
         <input type="checkbox" />
         Remember me

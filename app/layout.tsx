@@ -3,6 +3,8 @@ import { siteConfig } from "@/lib/site";
 import "./globals.css";
 import "./dashboard.css";
 import "./registration.css";
+import "./supplier-dashboard.css";
+import "./admin-dashboard.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

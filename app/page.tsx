@@ -40,7 +40,7 @@ export default function Home() {
             <p>A single platform where builders showcase display homes,<br />suppliers feature products, and buyers discover both.</p>
             <div className="hero-actions">
               <Link className="button button-cream" href="/builder/register"><HomeIcon /> Register as a builder <ArrowIcon size={18} /></Link>
-              <Link className="button button-outline" href="/supplier"><BoxIcon /> Register as a supplier <ArrowIcon size={18} /></Link>
+              <Link className="button button-outline" href="/supplier/register"><BoxIcon /> Register as a supplier <ArrowIcon size={18} /></Link>
             </div>
             <a className="scroll-cue" href="#how-it-works"><span aria-hidden="true">&darr;</span>Scroll to explore</a>
           </div>
@@ -60,7 +60,7 @@ export default function Home() {
             <div className="audience-content"><div className="glass-icon"><HomeIcon size={31} /></div><h2>For builders</h2><span className="audience-divider" /><p>Showcase your display homes,<br />capture leads and give customers<br />a seamless selection experience.</p><Link className="audience-link" href="/builder/register">Get started as a builder <ArrowIcon size={18} /></Link></div>
           </article>
           <article className="audience-card suppliers" id="for-suppliers">
-            <div className="audience-content"><div className="glass-icon"><BoxIcon size={31} /></div><h2>For suppliers</h2><span className="audience-divider" /><p>Feature your products inside<br />display homes and reach buyers<br />at the perfect moment.</p><Link className="audience-link" href="/supplier">Get started as a supplier <ArrowIcon size={18} /></Link></div>
+            <div className="audience-content"><div className="glass-icon"><BoxIcon size={31} /></div><h2>For suppliers</h2><span className="audience-divider" /><p>Feature your products inside<br />display homes and reach buyers<br />at the perfect moment.</p><Link className="audience-link" href="/supplier/register">Get started as a supplier <ArrowIcon size={18} /></Link></div>
           </article>
         </section>
         <section className="trusted" aria-label="Trusted builders and suppliers">

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
-import {DashboardShell} from "@/components/dashboard-shell";
+import { AdminDashboard } from "@/components/admin/admin-dashboard";
+
 export const metadata: Metadata = { title: "Admin portal", robots: { index: false, follow: false } };
-export default function AdminPage(){return <DashboardShell role="admin"/>}
+
+export default function AdminPage() {
+  return <AdminDashboard />;
+}

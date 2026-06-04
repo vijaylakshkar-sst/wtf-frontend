@@ -1,9 +1,9 @@
 import { BoxIcon, CheckIcon, ClockIcon, FlagIcon } from "@/components/icons";
-import type { productStats } from "@/components/builder/products/data";
 
 const icons = { gold: BoxIcon, green: CheckIcon, amber: ClockIcon, red: FlagIcon };
+type ProductMetricStat = { label: string; value: string; note: string; tone: keyof typeof icons };
 
-export function MetricCard({ stat }: { stat: (typeof productStats)[number] }) {
+export function MetricCard({ stat }: { stat: ProductMetricStat }) {
   const Icon = icons[stat.tone];
 
   return (

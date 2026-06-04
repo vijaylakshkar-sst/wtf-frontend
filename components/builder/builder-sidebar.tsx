@@ -10,7 +10,7 @@ export function BuilderSidebar({ isOpen }: { isOpen: boolean }) {
 
   return (
     <aside className={`builder-sidebar${isOpen ? " open" : " closed"}`}>
-      <section className="builder-company"><span>AH</span><div><strong>Acme Homes</strong><small>4 display homes active</small></div></section>
+      {/* <section className="builder-company"><span>AH</span><div><strong>Acme Homes</strong><small>4 display homes active</small></div></section> */}
       <nav aria-label="Builder portal navigation">
         <small>Main</small>
         <Link className={pathname === "/builder" ? "active" : ""} href="/builder"><GridIcon size={18} /> Dashboard</Link>

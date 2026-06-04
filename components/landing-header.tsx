@@ -23,7 +23,6 @@ export function LandingHeader() {
         <a href="#how-it-works" onClick={() => setIsMenuOpen(false)}>How it works</a>
         <a href="#for-builders" onClick={() => setIsMenuOpen(false)}>For builders</a>
         <a href="#for-suppliers" onClick={() => setIsMenuOpen(false)}>For suppliers</a>
-        <Link href="/sign-in" onClick={() => setIsMenuOpen(false)}>Sign in</Link>
       </nav>
       <Link className="button button-small button-cream" href="/sign-in">Sign in</Link>
       <button className="mobile-menu" aria-expanded={isMenuOpen} aria-label="Toggle navigation" onClick={() => setIsMenuOpen((open) => !open)}><MenuIcon /></button>
