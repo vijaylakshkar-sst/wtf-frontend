@@ -37,7 +37,6 @@ export function BuilderSidebar({ isOpen }: { isOpen: boolean }) {
         ) : null}
         <Link className={pathname.startsWith("/builder/staff") ? "active" : ""} href="/builder/staff"><UsersIcon size={18} /> Staff</Link>
         <Link className={pathname.startsWith("/builder/roles-permissions") ? "active" : ""} href="/builder/roles-permissions"><ShieldIcon size={18} /> Roles & Permissions</Link>
-        <a href="#"><GearIcon size={18} /> Settings</a>
       </nav>
       <div className="builder-sidebar-quote"><strong>Build more.<br />Grow more.</strong><span aria-hidden="true">&rarr;</span></div>
     </aside>

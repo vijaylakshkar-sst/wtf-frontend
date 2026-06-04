@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpenIcon, BoxIcon, GearIcon, GridIcon, HomeIcon, MailIcon, ShieldIcon, UsersIcon } from "@/components/icons";
+import { BookOpenIcon, BoxIcon, GridIcon, HomeIcon, MailIcon, ShieldIcon, UsersIcon } from "@/components/icons";
 
 export function AdminSidebar({ isOpen }: { isOpen: boolean }) {
   const pathname = usePathname();
@@ -19,8 +19,6 @@ export function AdminSidebar({ isOpen }: { isOpen: boolean }) {
         <Link className={pathname.startsWith("/admin/product-moderation") ? "active" : ""} href="/admin/product-moderation"><ShieldIcon size={18} /> Product Moderation</Link>
         <Link className={pathname.startsWith("/admin/cms-management") ? "active" : ""} href="/admin/cms-management"><BookOpenIcon size={18} /> CMS Management</Link>
         <Link className={pathname.startsWith("/admin/contact-enquiries") ? "active" : ""} href="/admin/contact-enquiries"><MailIcon size={18} /> Contact Enquiries</Link>
-        <small>Admin</small>
-        <a href="#"><GearIcon size={18} /> Settings</a>
       </nav>
       <div className="builder-sidebar-quote"><strong>Manage the<br />platform flow.</strong><span aria-hidden="true">&rarr;</span></div>
     </aside>
