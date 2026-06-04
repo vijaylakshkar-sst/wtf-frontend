@@ -108,12 +108,6 @@ export function BuilderRegistration() {
             </FormSection>
             <FormSection icon={<UsersIcon />} title="Lead workflow">
               <Field label="New leads sent to" placeholder="sales@acmehomes.com.au" />
-              <SelectField label="CRM integration">HubSpot</SelectField>
-              <Field label="Qualification stages" placeholder="New → Contacted → Qualified → Appointed" wide />
-              <div className="notification-box wide">
-                <span>Notifications</span>
-                {["New display home visits", "Saved products", "Selection submissions", "Repeat visits"].map((item, index) => <label key={item}>{item}<input defaultChecked={index < 2} type="checkbox" /></label>)}
-              </div>
             </FormSection>
             <div className="registration-actions"><button className="registration-back" type="button" onClick={() => setStep(1)}>← Back</button><button className="registration-primary" type="button" onClick={() => setStep(3)}>Submit application <ArrowIcon size={18} /></button></div>
           </>
