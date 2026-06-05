@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BellIcon, KeyIcon, LogoutIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
+import { LogoutButton } from "@/components/logout-button";
+import { BellIcon, KeyIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
 
 type SupplierHeaderProps = {
   isFullscreen: boolean;
@@ -36,7 +37,7 @@ export function SupplierHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle
               <div className="profile-drawer-heading"><strong>Acme Surfaces</strong><small>Supplier account</small></div>
               <a href="#"><UserIcon size={17} /> Update profile</a>
               <a href="#"><KeyIcon size={17} /> Change password</a>
-              <Link href="/sign-in"><LogoutIcon size={17} /> Logout</Link>
+              <LogoutButton />
             </div>
           ) : null}
         </div>
@@ -44,3 +45,4 @@ export function SupplierHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle
     </header>
   );
 }
+

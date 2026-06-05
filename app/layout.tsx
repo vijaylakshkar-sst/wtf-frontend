@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AuthRouteGuard } from "@/components/auth-route-guard";
+import { ToastProvider } from "@/components/toast-provider";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 import "./dashboard.css";
@@ -33,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><ToastProvider><AuthRouteGuard>{children}</AuthRouteGuard></ToastProvider></body></html>;
 }

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BellIcon, KeyIcon, LogoutIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
+import { LogoutButton } from "@/components/logout-button";
+import { BellIcon, KeyIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
 
 type BuilderHeaderProps = {
   isFullscreen: boolean;
@@ -36,7 +37,7 @@ export function BuilderHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle,
               <div className="profile-drawer-heading"><strong>Jane Smith</strong><small>Builder account</small></div>
               <Link href="/builder/profile"><UserIcon size={17} /> Update profile</Link>
               <Link href="/builder/change-password"><KeyIcon size={17} /> Change password</Link>
-              <Link href="/sign-in"><LogoutIcon size={17} /> Logout</Link>
+              <LogoutButton />
             </div>
           )}
         </div>
@@ -44,3 +45,4 @@ export function BuilderHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle,
     </header>
   );
 }
+

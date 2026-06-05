@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BellIcon, KeyIcon, LogoutIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
+import { LogoutButton } from "@/components/logout-button";
+import { BellIcon, KeyIcon, MaximizeIcon, MenuIcon, MinimizeIcon, UserIcon } from "@/components/icons";
 
 type AdminHeaderProps = {
   isFullscreen: boolean;
@@ -34,9 +35,9 @@ export function AdminHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle, o
           {isProfileOpen ? (
             <div className="profile-drawer">
               <div className="profile-drawer-heading"><strong>Admin</strong><small>Platform account</small></div>
-              <a href="#"><UserIcon size={17} /> Update profile</a>
-              <a href="#"><KeyIcon size={17} /> Change password</a>
-              <Link href="/sign-in"><LogoutIcon size={17} /> Logout</Link>
+              <Link href="/admin/profile" onClick={() => setIsProfileOpen(false)}><UserIcon size={17} /> Update profile</Link>
+              <Link href="/admin/change-password" onClick={() => setIsProfileOpen(false)}><KeyIcon size={17} /> Change password</Link>
+              <LogoutButton />
             </div>
           ) : null}
         </div>
@@ -44,3 +45,4 @@ export function AdminHeader({ isFullscreen, isSidebarOpen, onFullscreenToggle, o
     </header>
   );
 }
+

@@ -5,6 +5,7 @@ export type AdminDirectoryType = "builders" | "suppliers" | "customers";
 
 export type AdminDirectoryRow = {
   id: string;
+  profileId?: string;
   name: string;
   primary: string;
   secondary: string;
