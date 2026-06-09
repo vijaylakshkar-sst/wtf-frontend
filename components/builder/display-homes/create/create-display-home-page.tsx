@@ -11,20 +11,27 @@ import { DetailsStep } from "@/components/builder/display-homes/create/steps/det
 import { FloorPlanStep } from "@/components/builder/display-homes/create/steps/floor-plan-step";
 import { QrStep } from "@/components/builder/display-homes/create/steps/qr-step";
 import { RoomsStep } from "@/components/builder/display-homes/create/steps/rooms-step";
+import { ProductUploadStep } from "@/components/builder/display-homes/create/steps/products-upload";
+import { AiProductResultsStep } from "@/components/builder/display-homes/create/steps/products-result";
+import { ProductsVerifyEditStep } from "@/components/builder/display-homes/create/steps/products-verify-edit";
 
 const stepComponents: Record<CreateDisplayHomeStepId, React.ComponentType> = {
   details: DetailsStep,
   classification: ClassificationStep,
   "floor-plan": FloorPlanStep,
   rooms: RoomsStep,
+  "products-upload": ProductUploadStep,
+  "products-result": AiProductResultsStep,
+  "products-verify-edit": ProductsVerifyEditStep,
   qr: QrStep,
+  
 };
 
 export function CreateDisplayHomePage() {
   const [activeStep, setActiveStep] = useState<CreateDisplayHomeStepId>("details");
   const activeIndex = createDisplayHomeSteps.findIndex((step) => step.id === activeStep);
   const ActiveStep = stepComponents[activeStep];
-  const isFinalSubmitStep = activeStep === "rooms";
+  const isFinalSubmitStep = activeStep === "products-verify-edit";
 
   const nextStep = useMemo(() => createDisplayHomeSteps[Math.min(activeIndex + 1, createDisplayHomeSteps.length - 1)]?.id, [activeIndex]);
   const previousStep = useMemo(() => createDisplayHomeSteps[Math.max(activeIndex - 1, 0)]?.id, [activeIndex]);

@@ -18,12 +18,12 @@ export function DetailsStep() {
           <Field label="Sales consultant"><select defaultValue="Jane Smith"><option>Jane Smith</option><option>Alex Warren</option></select></Field>
           <Field label="Colour consultant"><select defaultValue="Priya Nair"><option>Priya Nair</option><option>Olivia Tran</option></select></Field>
         </div>
-        <div className="create-home-upload-tiles">
+        {/* <div className="create-home-upload-tiles">
           {homeUploads.map((upload) => {
             const Icon = upload.icon;
             return <button key={upload.label} type="button"><Icon size={26} /><strong>{upload.label}</strong><small>{upload.note}</small></button>;
           })}
-        </div>
+        </div> */}
       </SectionCard>
     </StepShell>
   );

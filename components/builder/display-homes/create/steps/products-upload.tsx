@@ -2,20 +2,19 @@ import { SparklesIcon, UploadIcon } from "@/components/icons";
 import { createDisplayHomeSteps } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
-export function FloorPlanStep() {
+export function ProductUploadStep() {
   return (
-    <StepShell step={createDisplayHomeSteps[2]}>
+    <StepShell step={createDisplayHomeSteps[4]}>
       <div className="create-home-ai-callout">
         <SparklesIcon size={22} />
         <div>
-          <strong>AI-powered room mapping</strong>
-          <p>Upload your floor plan - AI identifies rooms, names, structure and suggests product associations. You review before publishing.</p>
+          <strong>AI-powered Products</strong>
+          <p>Upload your Products - AI identifies products,category, product codes, colors. You review before publishing.</p>
         </div>
       </div>
       <div className="create-home-dropzone">
         <span><UploadIcon size={31} /></span>
-        <strong>Drag & drop your floor plan</strong>
-        <small>PDF - PNG - JPG - CAD (future)</small>
+        <strong>Drag & drop your Product guide</strong>       
         <button type="button"><UploadIcon size={15} /> Browse files</button>
       </div>      
     </StepShell>

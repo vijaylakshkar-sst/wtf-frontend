@@ -24,7 +24,7 @@ export function BuilderSidebar({ isOpen }: { isOpen: boolean }) {
         ) : null}
         <small>Customers</small>
         <Link className={pathname.startsWith("/builder/leads") ? "active" : ""} href="/builder/leads"><UsersIcon size={18} /> Leads & Customers</Link>
-        <a href="#"><ClipboardIcon size={18} /> Selections</a>
+        {/* <a href="#"><ClipboardIcon size={18} /> Selections</a> */}
         <small>Business</small>
         <Link className={pathname.startsWith("/builder/analytics") ? "active" : ""} href="/builder/analytics"><ChartIcon size={18} /> Analytics</Link>
         <Link className={pathname.startsWith("/builder/masters") ? "active" : ""} href="/builder/masters"><GearIcon size={18} /> Masters</Link>

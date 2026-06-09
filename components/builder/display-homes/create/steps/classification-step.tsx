@@ -24,13 +24,11 @@ export function ClassificationStep() {
         </div>
       </SectionCard>
       <SectionCard title="Access & lead capture">
-        <ToggleRow checked note="Auto capture visitor name, email & mobile" title="QR onboarding at entry" />
-        <ToggleRow note="Guests can explore without submitting details" title="Allow anonymous browsing" />
-        <ToggleRow checked title="Allow selection submissions" />
-        <div className="create-home-approval-row">
-          <strong>Lead approval mode</strong>
-          <select defaultValue="Manual"><option>Manual</option><option>Automatic</option></select>
-        </div>
+        <ToggleRow checked title="Will this display home use QR onboarding?" />
+        <ToggleRow title="Will staff manually approve leads?" />
+        <ToggleRow checked title="Should customers be able to submit selections?" />
+        <ToggleRow checked title="Should guests be able to browse anonymously?" />
+        
       </SectionCard>
     </StepShell>
   );
