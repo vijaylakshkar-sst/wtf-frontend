@@ -7,10 +7,10 @@ import { PdfPanel } from "@/components/builder/products/upload-pdf/pdf-panel";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
 type ProductsVerifyEditStepProps = {
-  onPublish: () => void;
+  onPublish?: () => void;
 };
 
-export function ProductsVerifyEditStep({ onPublish }: ProductsVerifyEditStepProps) {
+export function ProductsVerifyEditStep({ onPublish = () => {} }: ProductsVerifyEditStepProps) {
   const [approved, setApproved] = useState(false);
   const [published, setPublished] = useState(false);
   const [notice, setNotice] = useState("Review the product details before publishing.");

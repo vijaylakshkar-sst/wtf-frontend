@@ -13,7 +13,7 @@ type ProductItem = (typeof extractedProducts)[number] & {
 };
 
 type AiProductResultsStepProps = {
-  onMapProduct: () => void;
+  onMapProduct?: () => void;
 };
 
 const initialProducts: ProductItem[] = extractedProducts.map((product) => ({
@@ -21,7 +21,7 @@ const initialProducts: ProductItem[] = extractedProducts.map((product) => ({
   status: product.status === "flagged" ? "flagged" : product.status,
 }));
 
-export function AiProductResultsStep({ onMapProduct }: AiProductResultsStepProps) {
+export function AiProductResultsStep({ onMapProduct = () => {} }: AiProductResultsStepProps) {
   const [products, setProducts] = useState<ProductItem[]>(initialProducts);
   const [notice, setNotice] = useState("Review the extracted products before publishing.");
 
