@@ -4,7 +4,7 @@ import { StepShell } from "@/components/builder/display-homes/create/step-shell"
 
 export function QrStep() {
   return (
-    <StepShell step={createDisplayHomeSteps[4]}>
+    <StepShell step={createDisplayHomeSteps[8]}>
       <div className="create-home-qr-success">
         <span><CheckIcon size={36} /></span>
         <h3>Display home published</h3>

@@ -14,7 +14,7 @@ export function CreateStepper({ activeStep, onSelectStep }: { activeStep: Create
         return (
           <button className={`${isActive ? "active" : ""} ${isComplete ? "complete" : ""}`} key={step.id} onClick={() => onSelectStep(step.id)} type="button">
             <span className="create-home-step-dot">{isComplete ? "\u2713" : step.shortLabel}</span>
-            <span className="create-home-step-label">{step.shortLabel} {step.title}</span>
+            <span className="create-home-step-label">{step.title}</span>
             {index < createDisplayHomeSteps.length - 1 ? <i aria-hidden="true" /> : null}
           </button>
         );

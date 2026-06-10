@@ -7,6 +7,7 @@ import { ArrowIcon } from "@/components/icons";
 import { CreateStepper } from "@/components/builder/display-homes/create/create-stepper";
 import { createDisplayHomeSteps, type CreateDisplayHomeStepId } from "@/components/builder/display-homes/create/workflow-data";
 import { ClassificationStep } from "@/components/builder/display-homes/create/steps/classification-step";
+import { AiColourCombinationReviewStep } from "@/components/builder/display-homes/create/steps/ai-colour-review-step";
 import { DetailsStep } from "@/components/builder/display-homes/create/steps/details-step";
 import { FloorPlanStep } from "@/components/builder/display-homes/create/steps/floor-plan-step";
 import { QrStep } from "@/components/builder/display-homes/create/steps/qr-step";
@@ -21,25 +22,39 @@ const stepComponents: Record<CreateDisplayHomeStepId, React.ComponentType> = {
   "floor-plan": FloorPlanStep,
   rooms: RoomsStep,
   "products-upload": ProductUploadStep,
+  "colour-review": AiColourCombinationReviewStep,
   "products-result": AiProductResultsStep,
   "products-verify-edit": ProductsVerifyEditStep,
   qr: QrStep,
-  
 };
 
 export function CreateDisplayHomePage() {
   const [activeStep, setActiveStep] = useState<CreateDisplayHomeStepId>("details");
   const activeIndex = createDisplayHomeSteps.findIndex((step) => step.id === activeStep);
-  const ActiveStep = stepComponents[activeStep];
   const isFinalSubmitStep = activeStep === "products-verify-edit";
 
   const nextStep = useMemo(() => createDisplayHomeSteps[Math.min(activeIndex + 1, createDisplayHomeSteps.length - 1)]?.id, [activeIndex]);
   const previousStep = useMemo(() => createDisplayHomeSteps[Math.max(activeIndex - 1, 0)]?.id, [activeIndex]);
+  const renderActiveStep = () => {
+    if (activeStep === "products-result") {
+      return <AiProductResultsStep onMapProduct={() => setActiveStep("products-verify-edit")} />;
+    }
+
+    if (activeStep === "products-verify-edit") {
+      return <ProductsVerifyEditStep onPublish={() => setActiveStep("qr")} />;
+    }
+
+    const ActiveStep = stepComponents[activeStep];
+    return <ActiveStep />;
+  };
 
   return (
     <BuilderShell>
       <section className="builder-main create-home-main">
-        <div className="create-home-shell">
+        <div
+          className={`create-home-shell ${activeStep === "colour-review" ? "wide" : ""}`}
+          style={activeStep === "colour-review" ? { maxWidth: "1660px", width: "min(100%, 1660px)" } : undefined}
+        >
           <header className="create-home-header">
             <div className="create-home-breadcrumb">
               <Link href="/builder/display-homes">Create display home</Link>
@@ -48,7 +63,7 @@ export function CreateDisplayHomePage() {
             </div>
             <CreateStepper activeStep={activeStep} onSelectStep={setActiveStep} />
           </header>
-          <ActiveStep />
+          {renderActiveStep()}
           <footer className="create-home-workflow-actions">
             <button disabled={activeIndex === 0} onClick={() => setActiveStep(previousStep)} type="button"><span aria-hidden="true">&#8592;</span> Back</button>
             <button className="create-home-primary" disabled={activeIndex === createDisplayHomeSteps.length - 1} onClick={() => setActiveStep(nextStep)} type="button">

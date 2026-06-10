@@ -8,7 +8,7 @@ export function ProductUploadStep() {
       <div className="create-home-ai-callout">
         <SparklesIcon size={22} />
         <div>
-          <strong>AI-powered Products</strong>
+          <strong>AI-powered Product Guide</strong>
           <p>Upload your Products - AI identifies products,category, product codes, colors. You review before publishing.</p>
         </div>
       </div>

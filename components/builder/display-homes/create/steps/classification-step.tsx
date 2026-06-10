@@ -24,11 +24,10 @@ export function ClassificationStep() {
         </div>
       </SectionCard>
       <SectionCard title="Access & lead capture">
-        <ToggleRow checked title="Will this display home use QR onboarding?" />
-        <ToggleRow title="Will staff manually approve leads?" />
-        <ToggleRow checked title="Should customers be able to submit selections?" />
-        <ToggleRow checked title="Should guests be able to browse anonymously?" />
-        
+        <ToggleRow checked note="testing content" title="Will this display home use QR onboarding?" />
+        <ToggleRow note="testing content" title="Will staff manually approve leads?" />
+        <ToggleRow checked note="testing content" title="Should customers be able to submit selections?" />
+        <ToggleRow checked  note="testing content" title="Should guests be able to browse anonymously?" />        
       </SectionCard>
     </StepShell>
   );
