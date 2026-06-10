@@ -188,7 +188,7 @@ export function AiColourCombinationReviewStep() {
                   <p>Exterior Preview</p>
                 </div>
                 <div className="create-home-preview-head-actions">
-                  <span>{selectedCombination.label}</span>
+                  <span>{selectedCombination.name}</span>
                   <button aria-label="Close preview" className="create-home-preview-close" onClick={() => setShowPreview(false)} type="button">
                     <XIcon size={14} />
                   </button>

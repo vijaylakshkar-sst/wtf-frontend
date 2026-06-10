@@ -5,8 +5,11 @@ import { EditIcon, FlagIcon, HomeIcon, PlusIcon, TrashIcon, XIcon } from "@/comp
 import { createDisplayHomeSteps, detectedRooms } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
-type RoomItem = (typeof detectedRooms)[number] & {
+type RoomItem = {
   id: string;
+  name: string;
+  products: string;
+  icon: (typeof detectedRooms)[number]["icon"];
 };
 
 type ModalState =

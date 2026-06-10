@@ -8,7 +8,7 @@ import { createDisplayHomeSteps } from "@/components/builder/display-homes/creat
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
 type ProductStatus = (typeof extractedProducts)[number]["status"] | "mapped";
-type ProductItem = (typeof extractedProducts)[number] & {
+type ProductItem = Omit<(typeof extractedProducts)[number], "status"> & {
   status: ProductStatus;
 };
 
@@ -18,7 +18,7 @@ type AiProductResultsStepProps = {
 
 const initialProducts: ProductItem[] = extractedProducts.map((product) => ({
   ...product,
-  status: product.status === "flagged" ? "flagged" : product.status,
+  status: product.status,
 }));
 
 export function AiProductResultsStep({ onMapProduct = () => {} }: AiProductResultsStepProps) {
