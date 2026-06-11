@@ -1,6 +1,5 @@
 import { ClockIcon, PhoneIcon } from "@/components/icons";
 import { Field, SectionCard } from "@/components/builder/display-homes/create/form-controls";
-import { homeUploads } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 import { createDisplayHomeSteps } from "@/components/builder/display-homes/create/workflow-data";
 
@@ -16,7 +15,6 @@ export function DetailsStep() {
           <Field label="Saturday"><span className="create-home-input-icon"><input defaultValue="10am - 4pm" /><ClockIcon size={14} /></span></Field>
           <Field label="Sunday"><span className="create-home-input-icon"><input defaultValue="11am - 3pm" /><ClockIcon size={14} /></span></Field>
           <Field label="Sales consultant"><select defaultValue="Jane Smith"><option>Jane Smith</option><option>Alex Warren</option></select></Field>
-          <Field label="Colour consultant"><select defaultValue="Priya Nair"><option>Priya Nair</option><option>Olivia Tran</option></select></Field>
         </div>
         {/* <div className="create-home-upload-tiles">
           {homeUploads.map((upload) => {

@@ -34,7 +34,7 @@ export const extractedProducts = [
   { name: "Unknown - ref #4482-B", code: "p13", supplier: "No supplier", confidence: "Low quality", status: "flagged", image: "/supplier_section.png" },
 ] as const;
 
-export const colourReviewTabs = ["Exterior", "Kitchen", "Wet Areas", "Interior Finishes"] as const;
+export const colourReviewTabs = ["Exterior", "Kitchen", "Bathrooms", "Laundry", "Interior Finishes"] as const;
 
 export const colourReviewCombinations = [
   {
@@ -152,7 +152,7 @@ export const colourReviewCombinations = [
     summaryStats: { standard: 4, upgrade: 3 },
   },
   {
-    category: "Wet Areas",
+    category: "Bathrooms",
     name: "Spa Calm",
     vibe: "Calm - Clean - Spa",
     badge: "Recommended",
@@ -167,6 +167,25 @@ export const colourReviewCombinations = [
       { label: "Mirror", status: "Standard", value: "Slim Edge", tone: "standard" },
       { label: "Basin", status: "Standard", value: "Soft White", tone: "standard" },
       { label: "Grout", status: "Standard", value: "Warm Grey", tone: "standard" },
+    ],
+    summaryStats: { standard: 6, upgrade: 1 },
+  },
+  {
+    category: "Laundry",
+    name: "Clean Utility",
+    vibe: "Practical - Bright - Streamlined",
+    badge: "Recommended",
+    upgrades: 1,
+    image: "/builder_section.png",
+    summary: "6 standard items and 1 upgrade",
+    items: [
+      { label: "Cabinetry", status: "Standard", value: "White Laminate", tone: "standard" },
+      { label: "Benchtop", status: "Standard", value: "Compact Laminate", tone: "standard" },
+      { label: "Splashback", status: "Upgrade", value: "Subway Tile", tone: "upgrade" },
+      { label: "Tapware", status: "Standard", value: "Chrome", tone: "standard" },
+      { label: "Handles", status: "Standard", value: "Chrome", tone: "standard" },
+      { label: "Appliances", status: "Standard", value: "60cm Washer Dryer", tone: "standard" },
+      { label: "Flooring", status: "Standard", value: "Porcelain Tile", tone: "standard" },
     ],
     summaryStats: { standard: 6, upgrade: 1 },
   },

@@ -53,7 +53,7 @@ export function CreateDisplayHomePage() {
       <section className="builder-main create-home-main">
         <div
           className={`create-home-shell ${activeStep === "colour-review" ? "wide" : ""}`}
-          style={activeStep === "colour-review" ? { maxWidth: "1660px", width: "min(100%, 1660px)" } : undefined}
+          style={activeStep === "colour-review" ? { maxWidth: "none", width: "100%" } : undefined}
         >
           <header className="create-home-header">
             <div className="create-home-breadcrumb">

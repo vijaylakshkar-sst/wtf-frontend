@@ -1,0 +1,975 @@
+.shell{
+  background:rgba(255,250,245,.98);
+  border:1px solid #eadfd3;
+  border-radius:12px;
+  box-shadow:0 22px 60px rgba(0,0,0,.28);
+  display:grid;
+  gap:16px;
+  padding:18px 18px 16px;
+}
+
+.header{
+  align-items:flex-start;
+  display:flex;
+  gap:12px;
+}
+
+.titleBlock{
+  min-width:0;
+}
+
+.titleRow{
+  align-items:center;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.titleRow h1{
+  color:#161310;
+  font-size:32px;
+  line-height:1.05;
+  margin:0;
+  letter-spacing:-.04em;
+}
+
+.aiBadge{
+  align-items:center;
+  background:#e3f5e0;
+  border:1px solid #c6e6c0;
+  border-radius:999px;
+  color:#1b7b2b;
+  display:inline-flex;
+  gap:8px;
+  min-height:34px;
+  padding:0 14px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.titleBlock p{
+  color:#665b50;
+  font-size:14px;
+  margin:7px 0 0;
+}
+
+.tabs{
+  align-items:center;
+  border-bottom:1px solid #eee4d8;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:3px;
+  scrollbar-width:none;
+}
+
+.tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.tabButton{
+  align-items:center;
+  background:transparent;
+  border:0;
+  border-bottom:2px solid transparent;
+  color:#5e554a;
+  display:inline-flex;
+  gap:9px;
+  min-height:48px;
+  padding:0 14px 12px;
+  font-size:15px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.activeTab{
+  border-bottom-color:#bf6a17;
+  color:#18130f;
+}
+
+.content{
+  display:grid;
+  gap:10px;
+}
+
+.sectionCard{
+  background:#fff;
+  border:1px solid #eadfd3;
+  border-radius:11px;
+  box-shadow:0 6px 18px rgba(0,0,0,.04);
+  overflow:hidden;
+}
+
+.sectionHeader{
+  padding:14px 16px 10px;
+}
+
+.sectionTitle{
+  align-items:center;
+  display:flex;
+  gap:10px;
+}
+
+.sectionIcon{
+  align-items:center;
+  color:#b45d11;
+  display:inline-flex;
+  flex:0 0 auto;
+}
+
+.sectionTitle h2{
+  color:#1f1a16;
+  font-size:20px;
+  line-height:1.2;
+  margin:0;
+  letter-spacing:-.02em;
+}
+
+.sectionGrid{
+  display:grid;
+  min-width:0;
+}
+
+.group{
+  min-width:0;
+  padding:0 16px 16px;
+}
+
+.groupDivider{
+  border-left:1px solid #ece4da;
+}
+
+.groupLabel{
+  align-items:center;
+  color:#221c17;
+  display:flex;
+  gap:8px;
+  font-size:14px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+.groupLabelMeta{
+  color:#8a7865;
+  font-size:12px;
+  font-weight:700;
+}
+
+.tileGrid{
+  display:grid;
+  gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(92px, 1fr));
+}
+
+.tileButton{
+  align-items:center;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:14px;
+  color:#1f1a16;
+  cursor:pointer;
+  display:grid;
+  gap:8px;
+  justify-items:center;
+  padding:10px 8px 12px;
+  position:relative;
+  text-align:center;
+}
+
+.tileButton:hover{
+  background:#fffaf4;
+}
+
+.tileSelected{
+  border-color:#f08a33;
+  box-shadow:0 0 0 2px rgba(240,138,51,.14);
+  background:#fffaf4;
+}
+
+.tileCheck{
+  align-items:center;
+  border-radius:50%;
+  display:flex;
+  height:18px;
+  justify-content:center;
+  position:absolute;
+  right:5px;
+  top:5px;
+  z-index:3;
+  width:18px;
+}
+
+.tileCheckUnselected{
+  background:#fff;
+  border:1px solid #f08a33;
+  color:#f08a33;
+}
+
+.tileCheckSelected{
+  background:#111;
+  border:1px solid #111;
+  color:#fff;
+}
+
+.tileSwatch{
+  background-color:#ded7cd;
+  border:1px solid #ded6ca;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  display:block;
+  height:78px;
+  width:100%;
+}
+
+.tileVisual{
+  background:#fff;
+  border:1px solid #ded6ca;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  display:grid;
+  height:78px;
+  place-items:center;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+  width:100%;
+}
+
+.tileVisualImage{
+  background:#fff;
+}
+
+.tileMediaImage{
+  object-fit:contain;
+}
+
+.kitchenVisual{
+  display:block;
+  height:100%;
+  position:relative;
+  width:100%;
+}
+
+.kitchenCabinet{
+  border-radius:10px;
+}
+
+.kitchenCabinet:before{
+  background:linear-gradient(135deg, rgba(255,255,255,.32), rgba(255,255,255,0) 55%);
+  border-radius:10px;
+  content:"";
+  inset:0;
+  position:absolute;
+}
+
+.kitchenCabinet:after{
+  background:rgba(74,58,38,.18);
+  border-radius:999px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.1),
+    0 0 0 1px rgba(0,0,0,.08) inset;
+  content:"";
+  height:6px;
+  left:50%;
+  position:absolute;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:24px;
+}
+
+.kitchenBench{
+  border-radius:10px;
+}
+
+.kitchenBench:before{
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,0) 44%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.08) 0 8px, rgba(0,0,0,.04) 8px 16px);
+  border-radius:10px;
+  content:"";
+  inset:0;
+  position:absolute;
+}
+
+.kitchenBench:after{
+  background:rgba(0,0,0,.08);
+  border-radius:0 0 8px 8px;
+  bottom:0;
+  content:"";
+  height:12px;
+  left:0;
+  position:absolute;
+  right:0;
+}
+
+.kitchenTile{
+  border-radius:10px;
+  display:grid;
+  gap:2px;
+  grid-template-columns:repeat(4, 1fr);
+  padding:6px;
+}
+
+.kitchenTile:before{
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.4), rgba(255,255,255,0) 50%);
+  border-radius:10px;
+  content:"";
+  inset:0;
+  position:absolute;
+  z-index:0;
+}
+
+.kitchenTile:after{
+  background:
+    linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72)),
+    linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72));
+  content:"";
+  inset:6px;
+  mask:
+    linear-gradient(#000 0 0);
+  opacity:.12;
+  position:absolute;
+}
+
+.kitchenTapware{
+  display:block;
+  height:34px;
+  position:relative;
+  width:54px;
+}
+
+.kitchenTapware:before{
+  background:linear-gradient(180deg, #f1f1f1, #b9b9b9);
+  border-radius:999px 999px 12px 12px;
+  content:"";
+  height:24px;
+  left:4px;
+  position:absolute;
+  top:6px;
+  width:12px;
+}
+
+.kitchenTapware:after{
+  background:linear-gradient(180deg, #dadada, #9f9f9f);
+  border-radius:999px;
+  content:"";
+  height:8px;
+  left:14px;
+  position:absolute;
+  top:4px;
+  width:28px;
+}
+
+.kitchenHandle{
+  background:linear-gradient(180deg, #f5f5f5, #b9b9b9);
+  border-radius:999px;
+  display:block;
+  height:8px;
+  position:relative;
+  width:42px;
+}
+
+.kitchenHandle:before{
+  background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(0,0,0,.12));
+  border-radius:999px;
+  content:"";
+  height:6px;
+  left:3px;
+  position:absolute;
+  right:3px;
+  top:1px;
+}
+
+.circle{
+  border-radius:999px;
+  height:62px;
+  margin-top:7px;
+  width:62px;
+}
+
+.square{
+  border-radius:10px;
+}
+
+.texture{
+  border-radius:10px;
+}
+
+.wood{
+  border-radius:10px;
+}
+
+.metal{
+  border-radius:10px;
+}
+
+.tileArtworkDoor{
+  align-items:center;
+  display:flex;
+  height:100%;
+  justify-content:center;
+  width:100%;
+}
+
+.handleArtworkCylinder,
+.handleArtworkLever,
+.handleArtworkPull,
+.handleArtworkSmartLock{
+  display:block;
+  position:relative;
+}
+
+.handleArtworkCylinder{
+  background:linear-gradient(180deg,#f4f4f4,#d8d8d8);
+  border-radius:10px;
+  height:50px;
+  width:54px;
+}
+
+.handleArtworkCylinder:before{
+  background:#c7c7c7;
+  border-radius:999px;
+  content:"";
+  height:6px;
+  left:14px;
+  position:absolute;
+  top:22px;
+  width:26px;
+}
+
+.handleArtworkCylinder:after{
+  background:#999;
+  border-radius:999px;
+  content:"";
+  height:34px;
+  left:25px;
+  position:absolute;
+  top:6px;
+  width:4px;
+}
+
+.handleArtworkLever{
+  background:linear-gradient(180deg,#efefef,#bfc1c4);
+  border-radius:10px;
+  height:50px;
+  width:54px;
+}
+
+.handleArtworkLever:before{
+  background:#8a8d91;
+  border-radius:999px;
+  content:"";
+  height:8px;
+  left:19px;
+  position:absolute;
+  top:18px;
+  width:16px;
+}
+
+.handleArtworkLever:after{
+  background:#b4b7bb;
+  border-radius:999px;
+  content:"";
+  height:6px;
+  left:29px;
+  position:absolute;
+  top:21px;
+  transform:rotate(90deg);
+  transform-origin:center;
+  width:20px;
+}
+
+.handleArtworkPull{
+  background:linear-gradient(180deg,#f5f5f5,#bfc1c2);
+  border-radius:8px;
+  height:52px;
+  width:20px;
+}
+
+.handleArtworkPull:before{
+  background:linear-gradient(180deg,#ececec,#a8a8a8);
+  border-radius:999px;
+  content:"";
+  height:42px;
+  left:5px;
+  position:absolute;
+  top:5px;
+  width:6px;
+}
+
+.handleArtworkSmartLock{
+  background:linear-gradient(180deg,#e5e5e5,#b0b0b0);
+  border-radius:6px;
+  height:50px;
+  width:22px;
+}
+
+.handleArtworkSmartLock:before{
+  background:#8f9397;
+  border-radius:2px;
+  content:"";
+  height:28px;
+  left:7px;
+  position:absolute;
+  top:7px;
+  width:8px;
+}
+
+.tileArtworkAppliance{
+  align-items:center;
+  display:flex;
+  justify-content:center;
+  width:100%;
+}
+
+.applianceOven{
+  background:linear-gradient(180deg,#1d1d1d,#0f0f0f);
+  border-radius:2px;
+  height:42px;
+  position:relative;
+  width:58px;
+}
+
+.applianceOven:before{
+  background:#d8d8d8;
+  content:"";
+  height:2px;
+  left:6px;
+  position:absolute;
+  right:6px;
+  top:8px;
+}
+
+.applianceOven:after{
+  background:linear-gradient(180deg,#202020,#383838);
+  border-radius:1px;
+  bottom:6px;
+  content:"";
+  left:10px;
+  position:absolute;
+  right:10px;
+  top:14px;
+}
+
+.applianceCooktop{
+  background:linear-gradient(180deg,#151515,#090909);
+  border-radius:2px;
+  display:grid;
+  gap:3px;
+  grid-template-columns:repeat(2,1fr);
+  height:42px;
+  padding:6px;
+  width:58px;
+}
+
+.applianceCooktop i{
+  background:radial-gradient(circle at 50% 50%,#666 0 3px,#0f0f0f 4px 100%);
+  border:1px solid #3e3e3e;
+  border-radius:50%;
+  display:block;
+}
+
+.applianceTall{
+  background:linear-gradient(180deg,#f4f4f4,#cfcfcf);
+  border-radius:2px;
+  height:54px;
+  position:relative;
+  width:28px;
+}
+
+.applianceTall:before{
+  background:#999;
+  content:"";
+  height:2px;
+  left:3px;
+  position:absolute;
+  right:3px;
+  top:9px;
+}
+
+.applianceTall:after{
+  background:#bdbdbd;
+  border-radius:2px;
+  bottom:5px;
+  content:"";
+  height:24px;
+  left:5px;
+  position:absolute;
+  right:5px;
+}
+
+.applianceRangehood{
+  background:linear-gradient(180deg,#f0f0f0,#c8c8c8);
+  clip-path:polygon(10% 30%, 90% 30%, 100% 100%, 0 100%);
+  height:46px;
+  position:relative;
+  width:58px;
+}
+
+.applianceRangehood:before{
+  background:#151515;
+  clip-path:polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  content:"";
+  height:36px;
+  left:20px;
+  position:absolute;
+  top:-2px;
+  width:18px;
+}
+
+.applianceMicrowave{
+  background:linear-gradient(180deg,#1b1b1b,#0d0d0d);
+  border-radius:3px;
+  height:36px;
+  position:relative;
+  width:58px;
+}
+
+.applianceMicrowave:before{
+  background:#272727;
+  border-radius:2px;
+  content:"";
+  height:18px;
+  left:5px;
+  position:absolute;
+  top:5px;
+  width:24px;
+}
+
+.applianceMicrowave:after{
+  background:#444;
+  border-radius:2px;
+  content:"";
+  height:24px;
+  right:5px;
+  position:absolute;
+  top:5px;
+  width:18px;
+}
+
+.tileLabel{
+  font-size:11px;
+  font-weight:800;
+  line-height:1.2;
+  min-height:28px;
+}
+
+.productFinishDots{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  justify-content:center;
+  margin-top:-2px;
+  min-height:10px;
+  width:100%;
+}
+
+.productFinishDot{
+  border:1px solid rgba(120, 102, 84, .18);
+  border-radius:999px;
+  display:block;
+  height:10px;
+  width:10px;
+}
+
+.productFinishDotActive{
+  box-shadow:0 0 0 2px rgba(240,138,51,.2);
+  border-color:#f08a33;
+  transform:scale(1.18);
+}
+
+.combinationBadge{
+  align-items:center;
+  color:#8b5e35;
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}
+
+.combinationBadge span{
+  background:#f4e4ce;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  padding:6px 10px;
+}
+
+.combinationBadge strong{
+  font-size:12px;
+  font-weight:800;
+}
+
+.modalOverlay{
+  align-items:center;
+  background:rgba(18,14,10,.56);
+  backdrop-filter:blur(6px);
+  bottom:0;
+  display:flex;
+  justify-content:center;
+  left:0;
+  padding:20px;
+  position:fixed;
+  right:0;
+  top:0;
+  z-index:30;
+}
+
+.modal{
+  background:#fffaf5;
+  border:1px solid #eadfd3;
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.28);
+  max-width:720px;
+  padding:20px;
+  width:min(720px, 100%);
+}
+
+.modalHeader{
+  align-items:flex-start;
+  display:flex;
+  gap:16px;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.modalEyebrow{
+  color:#a55a12;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  margin:0 0 8px;
+  text-transform:uppercase;
+}
+
+.modalHeader h3{
+  color:#191511;
+  font-size:22px;
+  line-height:1.15;
+  margin:0;
+}
+
+.modalDescription{
+  color:#6d6053;
+  font-size:14px;
+  line-height:1.5;
+  margin:8px 0 0;
+}
+
+.modalCloseButton{
+  align-items:center;
+  background:#f4ebe1;
+  border:1px solid #e0d3c2;
+  border-radius:999px;
+  color:#664f38;
+  display:inline-flex;
+  height:36px;
+  justify-content:center;
+  width:36px;
+}
+
+.modalProductPreview{
+  align-items:center;
+  background:#fff;
+  border:1px solid #ede2d6;
+  border-radius:16px;
+  display:flex;
+  gap:16px;
+  margin-bottom:16px;
+  padding:14px;
+}
+
+.modalProductImage{
+  align-items:center;
+  background:#f8f4ee;
+  border:1px solid #e5d8c8;
+  border-radius:14px;
+  display:grid;
+  flex:0 0 auto;
+  height:96px;
+  overflow:hidden;
+  place-items:center;
+  position:relative;
+  width:132px;
+}
+
+.modalProductMeta{
+  color:#1d1814;
+  display:grid;
+  gap:4px;
+}
+
+.modalProductMeta span{
+  color:#94765a;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.modalProductMeta strong{
+  font-size:18px;
+  line-height:1.25;
+}
+
+.modalProductMeta p{
+  color:#665a4f;
+  font-size:14px;
+  line-height:1.45;
+  margin:0;
+}
+
+.modalProductMeta .productFinishDots{
+  justify-content:flex-start;
+  margin-top:8px;
+}
+
+.modalFinishGrid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.modalFinishTile{
+  align-items:center;
+  background:#fff;
+  border:1px solid #e5d8c8;
+  border-radius:14px;
+  color:#231d18;
+  cursor:pointer;
+  display:grid;
+  gap:10px;
+  justify-items:center;
+  padding:12px 10px 14px;
+  position:relative;
+  text-align:center;
+}
+
+.modalFinishTileSelected{
+  border-color:#f08a33;
+  box-shadow:0 0 0 2px rgba(240,138,51,.16);
+  background:#fffaf4;
+}
+
+.modalFinishSwatch{
+  display:block;
+  height:58px;
+  width:58px;
+}
+
+.modalFinishCheck{
+  align-items:center;
+  border-radius:999px;
+  display:flex;
+  height:18px;
+  justify-content:center;
+  position:absolute;
+  right:8px;
+  top:8px;
+  width:18px;
+  z-index:2;
+}
+
+.modalFinishCheckUnselected{
+  background:#fff;
+  border:1px solid #f08a33;
+  color:#f08a33;
+}
+
+.modalFinishCheckSelected{
+  background:#111;
+  border:1px solid #111;
+  color:#fff;
+}
+
+@media (max-width: 1180px){
+  .header{
+    flex-direction:column;
+  }
+
+  .sectionGrid{
+    grid-template-columns:1fr !important;
+  }
+
+  .groupDivider{
+    border-left:0;
+    border-top:1px solid #eee4d8;
+    padding-top:16px;
+    margin-top:4px;
+  }
+
+  .modal{
+    max-width:640px;
+  }
+}
+
+@media (max-width: 760px){
+  .shell{
+    padding:14px;
+  }
+
+  .titleRow{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .titleRow h1{
+    font-size:26px;
+  }
+
+  .tabButton{
+    font-size:14px;
+    padding-left:10px;
+    padding-right:12px;
+  }
+
+  .sectionHeader{
+    padding:14px 14px 8px;
+  }
+
+  .group{
+    padding:0 14px 14px;
+  }
+
+  .tileGrid{
+    grid-template-columns:repeat(auto-fit, minmax(84px, 1fr));
+  }
+
+  .tileSwatch{
+    height:70px;
+  }
+
+  .tileVisual{
+    height:70px;
+  }
+
+  .circle{
+    height:58px;
+    width:58px;
+  }
+
+  .combinationBadge{
+    justify-content:flex-start;
+  }
+
+  .modalOverlay{
+    padding:12px;
+    align-items:flex-end;
+  }
+
+  .modal{
+    border-radius:16px 16px 0 0;
+    max-width:none;
+  }
+
+  .modalHeader{
+    flex-direction:column;
+  }
+
+  .modalProductPreview{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .modalProductImage{
+    width:100%;
+  }
+}
