@@ -1,9 +1,9 @@
-import { BookOpenIcon, CameraIcon, FileIcon, HomeIcon, PaletteIcon, SparklesIcon } from "@/components/icons";
+import { BedIcon, BookOpenIcon, BoxIcon, CameraIcon, FileIcon, HomeIcon, PaletteIcon, SofaIcon, SparklesIcon } from "@/components/icons";
 
 export const createDisplayHomeSteps = [
   { id: "details", eyebrow: "Step 1", shortLabel: "1", title: "Details", description: "Add all the essential information about your display home.", icon: HomeIcon },
   { id: "classification", eyebrow: "Step 2", shortLabel: "2", title: "Classification", description: "Define how your display home should be categorised.", icon: SparklesIcon },
-  { id: "floor-plan", eyebrow: "Step 3", shortLabel: "3", title: "Floor Plan Upload", description: "Upload your floor plan to get started.", icon: FileIcon },
+  { id: "floor-plan", eyebrow: "Step 3", shortLabel: "3", title: "Floor Plan Extraction", description: "Upload a floor plan and review the extracted layout.", icon: FileIcon },
   { id: "rooms", eyebrow: "Step 4", shortLabel: "4", title: "AI Detected Rooms", description: "Review, edit or add any missing rooms.", icon: BookOpenIcon },
   { id: "products-upload", eyebrow: "Step 5", shortLabel: "5", title: "Product Guide Upload", description: "Upload your products to get started.", icon: FileIcon },
   { id: "colour-review", eyebrow: "Step 6", shortLabel: "6", title: "AI Colour Combination Review", description: "Review compatible colour combinations generated from the product guide.", icon: PaletteIcon },
@@ -26,6 +26,53 @@ export const detectedRooms = [
   { name: "Living room", products: "flooring, soft furnishings, lighting", icon: HomeIcon },
   { name: "Kitchen", products: "benchtops, cabinetry, tapware", icon: SparklesIcon },
   { name: "Ensuite", products: "tiles, tapware, vanity, mirrors", icon: BookOpenIcon },
+] as const;
+
+export const detectedRoomLevels = [
+  {
+    level: "Ground floor",
+    summary: "8 main spaces and 8 support zones",
+    note: "The floor plan shows public areas, utility spaces and the garage on this level.",
+    rooms: [
+      { name: "Alfresco", details: "Outdoor living", icon: HomeIcon, confidence: "99%" },
+      { name: "Kitchen", details: "Benchtops, cabinetry, tapware", icon: SparklesIcon, confidence: "98%" },
+      { name: "Meals", details: "Dining zone", icon: BookOpenIcon, confidence: "96%" },
+      { name: "Family", details: "Main living area", icon: SofaIcon, confidence: "95%" },
+      { name: "Home theatre", details: "Media / movie room", icon: CameraIcon, confidence: "91%" },
+      { name: "Home office", details: "Work zone", icon: BookOpenIcon, confidence: "90%" },
+      { name: "Pantry", details: "Storage", icon: BoxIcon, confidence: "94%" },
+      { name: "Laundry", details: "Utility space", icon: FileIcon, confidence: "93%" },
+      { name: "Guest room", details: "Bedroom / guest suite", icon: BedIcon, confidence: "92%" },
+      { name: "Ensuite", details: "Attached bathroom", icon: BookOpenIcon, confidence: "97%" },
+      { name: "W.I.R", details: "Walk-in robe", icon: BoxIcon, confidence: "95%" },
+      { name: "PDR", details: "Powder room", icon: BookOpenIcon, confidence: "89%" },
+      { name: "Double garage", details: "Vehicle storage", icon: BoxIcon, confidence: "98%" },
+      { name: "Bar", details: "Entertainment nook", icon: SparklesIcon, confidence: "88%" },
+      { name: "Broom", details: "Utility storage", icon: BoxIcon, confidence: "87%" },
+      { name: "Linen", details: "Storage", icon: BoxIcon, confidence: "88%" },
+      { name: "Store", details: "Storage", icon: BoxIcon, confidence: "86%" },
+    ],
+  },
+  {
+    level: "First floor",
+    summary: "5 main spaces and 5 support zones",
+    note: "Private rooms and the upstairs retreat are grouped here for quick review.",
+    rooms: [
+      { name: "Master bedroom", details: "Primary bedroom", icon: BedIcon, confidence: "99%" },
+      { name: "Retreat", details: "Upstairs lounge", icon: SofaIcon, confidence: "95%" },
+      { name: "Bedroom 3", details: "Bedroom", icon: BedIcon, confidence: "97%" },
+      { name: "Bedroom 4", details: "Bedroom", icon: BedIcon, confidence: "96%" },
+      { name: "Bedroom 5", details: "Bedroom", icon: BedIcon, confidence: "96%" },
+      { name: "Casual living", details: "Secondary living area", icon: SofaIcon, confidence: "94%" },
+      { name: "Nook", details: "Study / seating", icon: BookOpenIcon, confidence: "92%" },
+      { name: "Ensuite", details: "Primary bathroom", icon: BookOpenIcon, confidence: "98%" },
+      { name: "W.I.R", details: "Walk-in robe", icon: BoxIcon, confidence: "94%" },
+      { name: "W.I.R", details: "Walk-in robe", icon: BoxIcon, confidence: "94%" },
+      { name: "W.C.", details: "Toilet", icon: BookOpenIcon, confidence: "89%" },
+      { name: "W.C.", details: "Toilet", icon: BookOpenIcon, confidence: "88%" },
+      { name: "Storage", details: "Shared storage", icon: BoxIcon, confidence: "90%" },
+    ],
+  },
 ] as const;
 
 export const extractedProducts = [

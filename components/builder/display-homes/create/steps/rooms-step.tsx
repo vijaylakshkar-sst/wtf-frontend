@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { EditIcon, FlagIcon, HomeIcon, PlusIcon, TrashIcon, XIcon } from "@/components/icons";
-import { createDisplayHomeSteps, detectedRooms } from "@/components/builder/display-homes/create/workflow-data";
+import { useMemo, useState } from "react";
+import { EditIcon, FlagIcon, PlusIcon, TrashIcon, XIcon } from "@/components/icons";
+import { createDisplayHomeSteps, detectedRoomLevels } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
 type RoomItem = {
   id: string;
   name: string;
-  products: string;
-  icon: (typeof detectedRooms)[number]["icon"];
+  details: string;
+  floor: string;
+  confidence: string;
+  icon: (typeof detectedRoomLevels)[number]["rooms"][number]["icon"];
 };
 
 type ModalState =
@@ -18,10 +20,16 @@ type ModalState =
   | { mode: "review" }
   | { mode: "delete"; roomId: string };
 
-const initialRooms: RoomItem[] = detectedRooms.map((room, index) => ({
-  ...room,
-  id: `room-${index}`,
-}));
+const initialRooms: RoomItem[] = detectedRoomLevels.flatMap((level) =>
+  level.rooms.map((room, index) => ({
+    id: `${level.level.toLowerCase().replace(/\s+/g, "-")}-${index}`,
+    name: room.name,
+    details: room.details,
+    floor: level.level,
+    confidence: room.confidence,
+    icon: room.icon,
+  })),
+);
 
 export function RoomsStep() {
   const [rooms, setRooms] = useState<RoomItem[]>(initialRooms);
@@ -29,45 +37,54 @@ export function RoomsStep() {
   const [reviewRoomNote, setReviewRoomNote] = useState("AI confidence low - please confirm or rename");
   const [modal, setModal] = useState<ModalState | null>(null);
   const [draftName, setDraftName] = useState("");
-  const [draftProducts, setDraftProducts] = useState("");
+  const [draftDetails, setDraftDetails] = useState("");
+  const [draftFloor, setDraftFloor] = useState("Ground floor");
 
   const currentRoom = modal && "roomId" in modal ? rooms.find((room) => room.id === modal.roomId) ?? null : null;
+  const groupedRooms = useMemo(
+    () =>
+      detectedRoomLevels.map((level) => ({
+        ...level,
+        rooms: rooms.filter((room) => room.floor === level.level),
+      })),
+    [rooms],
+  );
 
   const closeModal = () => {
     setModal(null);
     setDraftName("");
-    setDraftProducts("");
+    setDraftDetails("");
+    setDraftFloor("Ground floor");
   };
 
   const openAddModal = () => {
     setDraftName("");
-    setDraftProducts("");
+    setDraftDetails("");
+    setDraftFloor("Ground floor");
     setModal({ mode: "add" });
   };
 
   const openEditModal = (room: RoomItem) => {
     setDraftName(room.name);
-    setDraftProducts(room.products);
+    setDraftDetails(room.details);
+    setDraftFloor(room.floor);
     setModal({ mode: "edit", roomId: room.id });
   };
 
   const openReviewModal = () => {
     setDraftName(reviewRoomName);
-    setDraftProducts(reviewRoomNote);
+    setDraftDetails(reviewRoomNote);
+    setDraftFloor("Ground floor");
     setModal({ mode: "review" });
   };
 
   const saveModal = () => {
     const nextName = draftName.trim();
-    const nextProducts = draftProducts.trim();
+    const nextDetails = draftDetails.trim();
 
     if (modal?.mode === "review") {
-      if (nextName) {
-        setReviewRoomName(nextName);
-      }
-      if (nextProducts) {
-        setReviewRoomNote(nextProducts);
-      }
+      if (nextName) setReviewRoomName(nextName);
+      if (nextDetails) setReviewRoomNote(nextDetails);
       closeModal();
       return;
     }
@@ -79,7 +96,8 @@ export function RoomsStep() {
             ? {
                 ...room,
                 name: nextName || room.name,
-                products: nextProducts || room.products,
+                details: nextDetails || room.details,
+                floor: draftFloor || room.floor,
               }
             : room,
         ),
@@ -89,17 +107,17 @@ export function RoomsStep() {
     }
 
     if (modal?.mode === "add") {
-      if (!nextName) {
-        return;
-      }
+      if (!nextName) return;
 
       setRooms((current) => [
         ...current,
         {
           id: `room-${Date.now()}`,
           name: nextName,
-          products: nextProducts || "Add suggested products",
-          icon: HomeIcon,
+          details: nextDetails || "Add extracted details",
+          floor: draftFloor,
+          confidence: "New",
+          icon: currentRoom?.icon ?? FlagIcon,
         },
       ]);
       closeModal();
@@ -119,48 +137,77 @@ export function RoomsStep() {
   return (
     <>
       <StepShell step={createDisplayHomeSteps[3]}>
-        <div className="create-home-room-list">
-          {rooms.map((room) => {
-            const Icon = room.icon;
-            return (
-              <article key={room.id}>
-                <span><Icon size={21} /></span>
-                <div>
-                  <strong>{room.name} <small>AI</small></strong>
-                  <p>Suggested: {room.products}</p>
-                </div>
-                <button aria-label={`Edit ${room.name}`} onClick={() => openEditModal(room)} type="button">
-                  <EditIcon size={15} />
-                </button>
-                <button
-                  aria-label={`Delete ${room.name}`}
-                  className="danger"
-                  onClick={() => setModal({ mode: "delete", roomId: room.id })}
-                  type="button"
-                >
-                  <TrashIcon size={15} />
-                </button>
-              </article>
-            );
-          })}
-        </div>
-
-        <div className="create-home-review-room">
-          <span><FlagIcon size={22} /></span>
-          <div>
-            <strong>{reviewRoomName} <small>Review</small></strong>
-            <p>{reviewRoomNote}</p>
+        <div className="create-home-floor-review">
+          <div className="create-home-ai-callout create-home-floor-review-callout">
+            <FlagIcon size={20} />
+            <div>
+              <strong>Floor-wise room review</strong>
+              <p>The extracted floor plan is now split into Ground Floor and First Floor so you can confirm what lives on each level before moving on.</p>
+            </div>
           </div>
-          <button onClick={openReviewModal} type="button">
-            <EditIcon size={14} />
-            Name
+
+          <div className="create-home-floor-review-summary">
+            {groupedRooms.map((level) => (
+              <article key={level.level}>
+                <span>{level.level}</span>
+                <strong>{level.rooms.length} rooms</strong>
+                <small>{level.summary}</small>
+              </article>
+            ))}
+          </div>
+
+          <div className="create-home-floor-review-grid">
+            {groupedRooms.map((level) => (
+              <section className="create-home-floor-review-panel" key={level.level}>
+                <header>
+                  <div>
+                    <span className="create-home-floor-plan-eyebrow">{level.level}</span>
+                    <h3>{level.summary}</h3>
+                    <p>{level.note}</p>
+                  </div>
+                </header>
+
+                <div className="create-home-floor-review-list">
+                  {level.rooms.map((room) => {
+                    const Icon = room.icon;
+                    return (
+                      <article key={room.id}>
+                        <span><Icon size={20} /></span>
+                        <div>
+                          <strong>{room.name} <small>{room.confidence}</small></strong>
+                          <p>{room.details}</p>
+                        </div>
+                        <button aria-label={`Edit ${room.name}`} onClick={() => openEditModal(room)} type="button">
+                          <EditIcon size={15} />
+                        </button>
+                        <button aria-label={`Delete ${room.name}`} className="danger" onClick={() => setModal({ mode: "delete", roomId: room.id })} type="button">
+                          <TrashIcon size={15} />
+                        </button>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <div className="create-home-review-room">
+            <span><FlagIcon size={22} /></span>
+            <div>
+              <strong>{reviewRoomName} <small>Review</small></strong>
+              <p>{reviewRoomNote}</p>
+            </div>
+            <button onClick={openReviewModal} type="button">
+              <EditIcon size={14} />
+              Name
+            </button>
+          </div>
+
+          <button className="create-home-add-room" onClick={openAddModal} type="button">
+            <PlusIcon size={15} />
+            Add missing room manually
           </button>
         </div>
-
-        <button className="create-home-add-room" onClick={openAddModal} type="button">
-          <PlusIcon size={15} />
-          Add missing room manually
-        </button>
       </StepShell>
 
       {modal && modal.mode !== "delete" && (
@@ -180,10 +227,10 @@ export function RoomsStep() {
                 </h2>
                 <p>
                   {modal.mode === "add"
-                    ? "Create a new room and add the suggested products."
+                    ? "Create a new room and place it on the correct floor."
                     : modal.mode === "review"
                       ? "Rename the room and update the review note."
-                      : "Update the room name or suggested products."}
+                      : "Update the room name, floor or description."}
                 </p>
               </div>
               <button aria-label="Close room modal" onClick={closeModal} type="button">
@@ -203,13 +250,22 @@ export function RoomsStep() {
                   />
                 </div>
               </label>
+              <label>
+                <span>Floor</span>
+                <div>
+                  <select onChange={(event) => setDraftFloor(event.target.value)} value={draftFloor}>
+                    <option>Ground floor</option>
+                    <option>First floor</option>
+                  </select>
+                </div>
+              </label>
               <label className="wide">
-                <span>{modal.mode === "review" ? "Review note" : "Suggested products"}</span>
+                <span>{modal.mode === "review" ? "Review note" : "Room details"}</span>
                 <div>
                   <input
-                    onChange={(event) => setDraftProducts(event.target.value)}
-                    placeholder={modal.mode === "review" ? "Add review note" : "Suggested products"}
-                    value={draftProducts}
+                    onChange={(event) => setDraftDetails(event.target.value)}
+                    placeholder={modal.mode === "review" ? "Add review note" : "Room details"}
+                    value={draftDetails}
                   />
                 </div>
               </label>
