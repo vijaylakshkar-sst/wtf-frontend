@@ -67,6 +67,27 @@
   display:none;
 }
 
+.tabActions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+
+.createNewButton{
+  align-items:center;
+  background:#b47b36;
+  border:0;
+  border-radius:999px;
+  color:#fff;
+  cursor:pointer;
+  display:inline-flex;
+  gap:8px;
+  min-height:38px;
+  padding:0 16px;
+  font-size:13px;
+  font-weight:900;
+}
+
 .tabButton{
   align-items:center;
   background:transparent;
@@ -101,6 +122,10 @@
 }
 
 .sectionHeader{
+  align-items:center;
+  display:flex;
+  gap:14px;
+  justify-content:space-between;
   padding:14px 16px 10px;
 }
 
@@ -123,6 +148,22 @@
   line-height:1.2;
   margin:0;
   letter-spacing:-.02em;
+}
+
+.sectionActionButton{
+  align-items:center;
+  background:#fff7f0;
+  border:1px solid #e8d7c5;
+  border-radius:999px;
+  color:#b25f11;
+  cursor:pointer;
+  display:inline-flex;
+  gap:7px;
+  min-height:34px;
+  padding:0 12px;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
 }
 
 .sectionGrid{
@@ -828,6 +869,169 @@
   grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
 }
 
+.createModalForm{
+  display:grid;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.createModalGrid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+
+.createModalField{
+  display:grid;
+  gap:7px;
+}
+
+.createModalField span{
+  color:#6b5d4f;
+  font-size:12px;
+  font-weight:800;
+}
+
+.createModalField input{
+  background:#fffaf5;
+  border:1px solid #e0d3c6;
+  border-radius:10px;
+  color:#1f1a16;
+  min-height:42px;
+  outline:0;
+  padding:0 12px;
+}
+
+.createModalField select{
+  background:#fffaf5;
+  border:1px solid #e0d3c6;
+  border-radius:10px;
+  color:#1f1a16;
+  font:inherit;
+  min-height:42px;
+  outline:0;
+  padding:0 12px;
+}
+
+.createModalField input[readonly]{
+  color:#7c6a59;
+}
+
+.colorInputRow{
+  align-items:center;
+  display:grid;
+  gap:10px;
+  grid-template-columns:44px minmax(0, 1fr);
+}
+
+.colorPicker{
+  appearance:none;
+  background:#fffaf5;
+  border:1px solid #e0d3c6;
+  border-radius:10px;
+  cursor:pointer;
+  height:42px;
+  padding:4px;
+  width:44px;
+}
+
+.colorPicker::-webkit-color-swatch-wrapper{
+  padding:0;
+}
+
+.colorPicker::-webkit-color-swatch{
+  border:0;
+  border-radius:7px;
+}
+
+.createModalPreview{
+  background:#fffaf5;
+  border:1px solid #eadfd3;
+  border-radius:14px;
+  display:grid;
+  gap:12px;
+  margin-top:4px;
+  padding:14px;
+}
+
+.createModalPreviewHeader{
+  align-items:center;
+  display:flex;
+  justify-content:space-between;
+}
+
+.createModalPreviewHeader strong{
+  color:#1f1a16;
+  font-size:15px;
+}
+
+.createModalPreviewHeader span{
+  color:#9a7b5d;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.createModalPreviewGrid{
+  display:grid;
+  gap:10px;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+
+.createModalPreviewGrid article{
+  background:#fff;
+  border:1px solid #eadfd3;
+  border-radius:12px;
+  display:grid;
+  gap:6px;
+  padding:12px;
+}
+
+.createModalPreviewGrid small{
+  color:#9a7b5d;
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.createModalPreviewGrid strong{
+  color:#1f1a16;
+  font-size:14px;
+}
+
+.createModalPreviewGrid span{
+  color:#6b5d4f;
+  font-size:12px;
+}
+
+.createModalFooter{
+  align-items:center;
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  margin-top:18px;
+}
+
+.createModalFooter button{
+  align-items:center;
+  background:#fffaf5;
+  border:1px solid #d8cabe;
+  border-radius:10px;
+  color:#4a3f35;
+  display:inline-flex;
+  font-size:13px;
+  font-weight:900;
+  justify-content:center;
+  min-height:40px;
+  padding:0 16px;
+}
+
+.createModalFooter button:last-child{
+  background:#b47b36;
+  border-color:#b47b36;
+  color:#fff;
+}
+
 .modalFinishTile{
   align-items:center;
   background:#fff;
@@ -971,5 +1175,15 @@
 
   .modalProductImage{
     width:100%;
+  }
+
+  .createModalGrid,
+  .createModalPreviewGrid{
+    grid-template-columns:1fr;
+  }
+
+  .createModalFooter{
+    align-items:stretch;
+    display:grid;
   }
 }

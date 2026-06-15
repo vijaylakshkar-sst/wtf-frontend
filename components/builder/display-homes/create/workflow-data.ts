@@ -1,15 +1,11 @@
-import { BedIcon, BookOpenIcon, BoxIcon, CameraIcon, FileIcon, HomeIcon, PaletteIcon, SofaIcon, SparklesIcon } from "@/components/icons";
+import { BedIcon, BookOpenIcon, BoxIcon, CameraIcon, FileIcon, HomeIcon, SofaIcon, SparklesIcon } from "@/components/icons";
 
 export const createDisplayHomeSteps = [
   { id: "details", eyebrow: "Step 1", shortLabel: "1", title: "Details", description: "Add all the essential information about your display home.", icon: HomeIcon },
   { id: "classification", eyebrow: "Step 2", shortLabel: "2", title: "Classification", description: "Define how your display home should be categorised.", icon: SparklesIcon },
   { id: "floor-plan", eyebrow: "Step 3", shortLabel: "3", title: "Floor Plan Extraction", description: "Upload a floor plan and review the extracted layout.", icon: FileIcon },
   { id: "rooms", eyebrow: "Step 4", shortLabel: "4", title: "AI Detected Rooms", description: "Review, edit or add any missing rooms.", icon: BookOpenIcon },
-  { id: "products-upload", eyebrow: "Step 5", shortLabel: "5", title: "Product Guide Upload", description: "Upload your products to get started.", icon: FileIcon },
-  { id: "colour-review", eyebrow: "Step 6", shortLabel: "6", title: "AI Colour Combination Review", description: "Review compatible colour combinations generated from the product guide.", icon: PaletteIcon },
-  { id: "products-result", eyebrow: "Step 7", shortLabel: "7", title: "Products Result", description: "AI extracted products", icon: BookOpenIcon },
-  { id: "products-verify-edit", eyebrow: "Step 8", shortLabel: "8", title: "Products Verify", description: "Products Verify and Edit", icon: BookOpenIcon },
-  { id: "qr", eyebrow: "Step 9", shortLabel: "9", title: "QR Generated", description: "Your display home is ready for visitors.", icon: CameraIcon },
+  { id: "qr", eyebrow: "Step 5", shortLabel: "5", title: "QR Generated", description: "Your display home is ready for visitors.", icon: CameraIcon },
 ] as const;
 
 export type CreateDisplayHomeStepId = (typeof createDisplayHomeSteps)[number]["id"];

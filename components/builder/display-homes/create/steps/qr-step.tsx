@@ -1,13 +1,14 @@
-import { CheckIcon, FileIcon, PrintIcon, UploadIcon } from "@/components/icons";
+import Link from "next/link";
+import { CheckIcon, FileIcon, HomeIcon, PlusIcon, PrintIcon, UploadIcon } from "@/components/icons";
 import { createDisplayHomeSteps } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
 export function QrStep() {
   return (
-    <StepShell step={createDisplayHomeSteps[8]}>
+    <StepShell step={createDisplayHomeSteps[4]}>
       <div className="create-home-qr-success">
         <span><CheckIcon size={36} /></span>
-        <h3>Display home published</h3>
+        <h3>Display home published successfully</h3>
         <p>Tarneit 42 - The Whitmore is now live</p>
       </div>
       <section className="create-home-qr-card">
@@ -22,6 +23,16 @@ export function QrStep() {
           <button className="create-home-secondary" type="button"><PrintIcon size={15} /> Print</button>
         </div>
       </section>
+      <div className="create-home-qr-bottom-actions">
+        <Link className="create-home-secondary create-home-add-product" href="/builder">
+          <HomeIcon size={15} />
+          Back to Dashboard
+        </Link>
+        <button className="create-home-secondary create-home-add-product" type="button">
+          <PlusIcon size={15} />
+          Click To Add Product
+        </button>
+      </div>
     </StepShell>
   );
 }

@@ -1,4 +1,3 @@
-import { PlusIcon } from "@/components/icons";
 import { builderMetrics, chartPoints, recentLeads } from "@/components/builder/data";
 
 export function BuilderOverview() {
@@ -6,7 +5,6 @@ export function BuilderOverview() {
     <section className="builder-main">
       <div className="builder-welcome">
         <div><h1>Good morning, Jane</h1><p>Here&apos;s what&apos;s happening with your display homes.</p></div>
-        <button className="builder-primary"><PlusIcon size={18} /> Add display home</button>
       </div>
       <section className="builder-metrics" aria-label="Builder metrics">
         {builderMetrics.map(({ icon: Icon, label, value, change, positive }) => (

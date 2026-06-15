@@ -41,12 +41,6 @@ export function LeadsManagementPage() {
           {activeStep === 2 && activeLead ? <CustomerSelectionsStep lead={selectedLead} onSave={() => setNotice("Customer selection PDF saved.")} onSubmit={() => { setNotice(`${selectedLead.name}'s selections submitted to builder.`); setActiveStep(3); }} /> : null}
           {activeStep === 3 && activeLead ? <BuilderReviewStep lead={selectedLead} onApprove={() => setNotice(`${selectedLead.name}'s selections approved.`)} /> : null}
         </section>
-        {activeStep === 1 ? (
-          <footer className="leads-flow-actions">
-            <button onClick={goBack} type="button">Back</button>
-            <button onClick={() => selectStep(2)} type="button">Customer selections</button>
-          </footer>
-        ) : null}
         {activeStep === 2 ? (
           <footer className="leads-flow-actions single">
             <button onClick={goBack} type="button">Back</button>

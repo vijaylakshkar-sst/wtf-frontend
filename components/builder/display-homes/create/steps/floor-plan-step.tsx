@@ -1,13 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SparklesIcon, UploadIcon } from "@/components/icons";
 import { createDisplayHomeSteps } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 
-export function FloorPlanStep() {
+type FloorPlanStepProps = {
+  onValidityChange?: (isValid: boolean) => void;
+  validationAttempt?: number;
+};
+
+function isAllowedUpload(file: File | null) {
+  return Boolean(file && (file.type.startsWith("image/") || file.type === "application/pdf"));
+}
+
+export function FloorPlanStep({ onValidityChange, validationAttempt = 0 }: FloorPlanStepProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const shouldShowValidation = validationAttempt > 0;
+  const isValidUpload = useMemo(() => isAllowedUpload(selectedFile), [selectedFile]);
 
   useEffect(() => {
     if (!selectedFile || !selectedFile.type.startsWith("image/")) {
@@ -20,6 +31,18 @@ export function FloorPlanStep() {
 
     return () => URL.revokeObjectURL(url);
   }, [selectedFile]);
+
+  useEffect(() => {
+    onValidityChange?.(isValidUpload);
+  }, [isValidUpload, onValidityChange]);
+
+  const hasFile = Boolean(selectedFile);
+  const isImage = Boolean(selectedFile && selectedFile.type.startsWith("image/"));
+  const validationError = shouldShowValidation && !selectedFile
+    ? "Upload a floor plan to continue."
+    : shouldShowValidation && selectedFile && !isAllowedUpload(selectedFile)
+      ? "Please upload an image or PDF file."
+      : "";
 
   return (
     <StepShell step={createDisplayHomeSteps[2]}>
@@ -40,24 +63,24 @@ export function FloorPlanStep() {
           </div>
         </div>
 
-        <div className="create-home-dropzone create-home-floor-plan-dropzone">
+        <div className={`create-home-dropzone create-home-floor-plan-dropzone${shouldShowValidation && !isValidUpload ? " invalid" : ""}`}>
           {selectedFile && previewUrl ? (
             <>
               <img alt="Uploaded floor plan preview" className="create-home-floor-plan-image" src={previewUrl} />
               <strong>{selectedFile.name}</strong>
-              <small>Uploaded file preview</small>
+              <small>Image preview</small>
             </>
-          ) : selectedFile ? (
+          ) : selectedFile && selectedFile.type === "application/pdf" ? (
             <>
               <span><UploadIcon size={31} /></span>
               <strong>{selectedFile.name}</strong>
-              <small>Uploaded file is not an image. Please use PNG or JPG to preview inside the box.</small>
+              <small>PDF uploaded. Preview will be generated after the next step.</small>
             </>
           ) : (
             <>
               <span><UploadIcon size={31} /></span>
               <strong>Drag & drop your floor plan</strong>
-              <small>PDF - PNG - JPG - CAD (future)</small>
+              <small>Image or PDF only</small>
             </>
           )}
           <label className="create-home-primary create-home-floor-plan-upload-btn">
@@ -66,16 +89,33 @@ export function FloorPlanStep() {
             <input
               accept="image/*,application/pdf"
               aria-label="Upload floor plan"
-              onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                if (!file) {
+                  setSelectedFile(null);
+                  return;
+                }
+
+                if (file.type.startsWith("image/") || file.type === "application/pdf") {
+                  setSelectedFile(file);
+                  return;
+                }
+
+                setSelectedFile(file);
+              }}
               type="file"
             />
           </label>
         </div>
 
+        <p className="create-home-field-error create-home-floor-plan-error" aria-hidden={!validationError}>
+          {validationError || "\u00A0"}
+        </p>
+
         <div className="create-home-floor-plan-caption">
           <div>
-            <strong>{selectedFile ? "Uploaded file preview" : "No file uploaded yet"}</strong>
-            <p>{selectedFile ? "This is the file you uploaded, shown directly in the upload box." : "Once uploaded, the floor plan will replace this placeholder inside the same box."}</p>
+            <strong>{selectedFile ? "Uploaded file ready" : "No file uploaded yet"}</strong>
+            <p>{selectedFile ? (isImage ? "This image is shown directly in the upload box." : "This PDF is ready for processing in the next step.") : "Upload a PNG, JPG, or PDF to continue."}</p>
           </div>
           <small>{selectedFile ? "Ready for step 4 room review" : "Upload to continue"}</small>
         </div>

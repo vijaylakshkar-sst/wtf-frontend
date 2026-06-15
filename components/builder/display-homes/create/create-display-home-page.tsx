@@ -1,45 +1,53 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { BuilderShell } from "@/components/builder/builder-shell";
 import { ArrowIcon, SparklesIcon } from "@/components/icons";
 import { CreateStepper } from "@/components/builder/display-homes/create/create-stepper";
-import { createDisplayHomeSteps, type CreateDisplayHomeStepId } from "@/components/builder/display-homes/create/workflow-data";
 import { ClassificationStep } from "@/components/builder/display-homes/create/steps/classification-step";
-import { AiColourCombinationReviewStep } from "@/components/builder/display-homes/create/steps/ai-colour-review-step";
 import { DetailsStep } from "@/components/builder/display-homes/create/steps/details-step";
 import { FloorPlanStep } from "@/components/builder/display-homes/create/steps/floor-plan-step";
 import { QrStep } from "@/components/builder/display-homes/create/steps/qr-step";
 import { RoomsStep } from "@/components/builder/display-homes/create/steps/rooms-step";
-import { ProductUploadStep } from "@/components/builder/display-homes/create/steps/products-upload";
-import { AiProductResultsStep } from "@/components/builder/display-homes/create/steps/products-result";
-import { ProductsVerifyEditStep } from "@/components/builder/display-homes/create/steps/products-verify-edit";
+import { createDisplayHomeSteps, type CreateDisplayHomeStepId } from "@/components/builder/display-homes/create/workflow-data";
 
-const stepComponents: Record<CreateDisplayHomeStepId, React.ComponentType> = {
+type CreateDisplayHomeStepProps = {
+  onValidityChange?: (isValid: boolean) => void;
+  validationAttempt?: number;
+} & Record<string, unknown>;
+
+type CreateDisplayHomeStepComponent = ComponentType<CreateDisplayHomeStepProps>;
+
+const stepComponents: Record<CreateDisplayHomeStepId, CreateDisplayHomeStepComponent> = {
   details: DetailsStep,
   classification: ClassificationStep,
   "floor-plan": FloorPlanStep,
   rooms: RoomsStep,
-  "products-upload": ProductUploadStep,
-  "colour-review": AiColourCombinationReviewStep,
-  "products-result": AiProductResultsStep,
-  "products-verify-edit": ProductsVerifyEditStep,
   qr: QrStep,
 };
 
 export function CreateDisplayHomePage() {
   const [activeStep, setActiveStep] = useState<CreateDisplayHomeStepId>("details");
+  const [isDetailsStepValid, setIsDetailsStepValid] = useState(true);
+  const [isClassificationStepValid, setIsClassificationStepValid] = useState(true);
+  const [isFloorPlanStepValid, setIsFloorPlanStepValid] = useState(true);
+  const [detailsValidationAttempt, setDetailsValidationAttempt] = useState(0);
+  const [classificationValidationAttempt, setClassificationValidationAttempt] = useState(0);
+  const [floorPlanValidationAttempt, setFloorPlanValidationAttempt] = useState(0);
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [isRoomStepConfirmOpen, setIsRoomStepConfirmOpen] = useState(false);
-  const [isColourStepConfirmOpen, setIsColourStepConfirmOpen] = useState(false);
   const generationTimerRef = useRef<number | null>(null);
-  const activeIndex = createDisplayHomeSteps.findIndex((step) => step.id === activeStep);
-  const isFinalSubmitStep = activeStep === "products-verify-edit";
-  const aiLoadingSteps = new Set<CreateDisplayHomeStepId>(["floor-plan", "products-upload", "colour-review"]);
 
-  const nextStep = useMemo(() => createDisplayHomeSteps[Math.min(activeIndex + 1, createDisplayHomeSteps.length - 1)]?.id, [activeIndex]);
-  const previousStep = useMemo(() => createDisplayHomeSteps[Math.max(activeIndex - 1, 0)]?.id, [activeIndex]);
+  const activeIndex = createDisplayHomeSteps.findIndex((step) => step.id === activeStep);
+  const nextStep = useMemo(
+    () => createDisplayHomeSteps[Math.min(activeIndex + 1, createDisplayHomeSteps.length - 1)]?.id,
+    [activeIndex],
+  );
+  const previousStep = useMemo(
+    () => createDisplayHomeSteps[Math.max(activeIndex - 1, 0)]?.id,
+    [activeIndex],
+  );
 
   useEffect(() => {
     return () => {
@@ -50,49 +58,39 @@ export function CreateDisplayHomePage() {
   }, []);
 
   useEffect(() => {
-    if (!aiLoadingSteps.has(activeStep)) {
-      setIsGeneratingAi(false);
-      if (generationTimerRef.current) {
-        window.clearTimeout(generationTimerRef.current);
-        generationTimerRef.current = null;
-      }
-    }
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "If you refresh, the current selection data will be lost before you save it.";
+    };
 
-    if (activeStep !== "rooms") {
-      setIsRoomStepConfirmOpen(false);
-    }
-
-    if (activeStep !== "colour-review") {
-      setIsColourStepConfirmOpen(false);
-    }
-  }, [activeStep]);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const goToNextStep = () => {
     if (!nextStep) {
       return;
     }
 
+    if (activeStep === "details" && !isDetailsStepValid) {
+      setDetailsValidationAttempt((value) => value + 1);
+      return;
+    }
+
+    if (activeStep === "classification" && !isClassificationStepValid) {
+      setClassificationValidationAttempt((value) => value + 1);
+      return;
+    }
+
+    if (activeStep === "floor-plan" && !isFloorPlanStepValid) {
+      setFloorPlanValidationAttempt((value) => value + 1);
+      return;
+    }
+
     if (activeStep === "rooms") {
       setIsRoomStepConfirmOpen(true);
-      return;
-    }
-
-    if (activeStep === "colour-review") {
-      setIsColourStepConfirmOpen(true);
-      return;
-    }
-
-    if (aiLoadingSteps.has(activeStep)) {
-      setIsGeneratingAi(true);
-      if (generationTimerRef.current) {
-        window.clearTimeout(generationTimerRef.current);
-      }
-
-      generationTimerRef.current = window.setTimeout(() => {
-        setActiveStep(nextStep);
-        setIsGeneratingAi(false);
-        generationTimerRef.current = null;
-      }, 1800);
       return;
     }
 
@@ -122,56 +120,30 @@ export function CreateDisplayHomePage() {
     setIsRoomStepConfirmOpen(false);
   };
 
-  const confirmColourStepNext = () => {
-    if (!nextStep) {
-      return;
-    }
-
-    setIsColourStepConfirmOpen(false);
-    setIsGeneratingAi(true);
-
-    if (generationTimerRef.current) {
-      window.clearTimeout(generationTimerRef.current);
-    }
-
-    generationTimerRef.current = window.setTimeout(() => {
-      setActiveStep(nextStep);
-      setIsGeneratingAi(false);
-      generationTimerRef.current = null;
-    }, 1800);
-  };
-
-  const cancelColourStepNext = () => {
-    setIsColourStepConfirmOpen(false);
-  };
-
   const isWorkflowLoading = isGeneratingAi;
   const getLoaderMessage = () => {
     if (activeStep === "rooms") {
       return "Submitting your data and preparing the next step.";
     }
 
-    if (activeStep === "products-upload") {
-      return "Please wait while we scan the product guide and prepare the next step.";
-    }
-
-    if (activeStep === "colour-review") {
-      return "Generating curated palettes and preparing your colour review.";
-    }
-
-    return "Please wait while we extract rooms and prepare the next step.";
+    return "Please wait while we prepare the next step.";
   };
 
   const renderActiveStep = () => {
-    if (activeStep === "products-result") {
-      return <AiProductResultsStep onMapProduct={() => setActiveStep("products-verify-edit")} />;
-    }
-
-    if (activeStep === "products-verify-edit") {
-      return <ProductsVerifyEditStep onPublish={() => setActiveStep("qr")} />;
-    }
-
     const ActiveStep = stepComponents[activeStep];
+
+    if (activeStep === "details") {
+      return <ActiveStep onValidityChange={setIsDetailsStepValid} validationAttempt={detailsValidationAttempt} />;
+    }
+
+    if (activeStep === "classification") {
+      return <ActiveStep onValidityChange={setIsClassificationStepValid} validationAttempt={classificationValidationAttempt} />;
+    }
+
+    if (activeStep === "floor-plan") {
+      return <ActiveStep onValidityChange={setIsFloorPlanStepValid} validationAttempt={floorPlanValidationAttempt} />;
+    }
+
     return <ActiveStep />;
   };
 
@@ -188,7 +160,7 @@ export function CreateDisplayHomePage() {
               <ArrowIcon size={16} />
               <span>{createDisplayHomeSteps[activeIndex].eyebrow} of {createDisplayHomeSteps.length}: {createDisplayHomeSteps[activeIndex].title}</span>
             </div>
-            <CreateStepper activeStep={activeStep} onSelectStep={setActiveStep} />
+            <CreateStepper activeStep={activeStep} />
           </header>
           <div className="create-home-workflow-stage">
             {renderActiveStep()}
@@ -202,12 +174,21 @@ export function CreateDisplayHomePage() {
               </div>
             ) : null}
           </div>
-          <footer className="create-home-workflow-actions">
-            <button disabled={activeIndex === 0} onClick={() => setActiveStep(previousStep)} type="button"><span aria-hidden="true">&#8592;</span> Back</button>
-            <button className="create-home-primary" disabled={activeIndex === createDisplayHomeSteps.length - 1 || isWorkflowLoading} onClick={goToNextStep} type="button">
-              {isFinalSubmitStep ? "Final submit" : "Next step"} <ArrowIcon size={15} />
-            </button>
-          </footer>
+          {activeStep !== "qr" ? (
+            <footer className="create-home-workflow-actions">
+              <button disabled={activeIndex === 0} onClick={() => setActiveStep(previousStep)} type="button">
+                <span aria-hidden="true">&#8592;</span> Back
+              </button>
+              <button
+                className="create-home-primary"
+                disabled={activeIndex === createDisplayHomeSteps.length - 1 || isWorkflowLoading}
+                onClick={goToNextStep}
+                type="button"
+              >
+                Next step <ArrowIcon size={15} />
+              </button>
+            </footer>
+          ) : null}
         </div>
       </section>
 
@@ -223,14 +204,14 @@ export function CreateDisplayHomePage() {
             <header>
               <span><SparklesIcon size={20} /></span>
               <div>
-                <h2 id="room-step-confirm-title">Continue to product upload?</h2>
-                <p>We have the room list confirmed. Step 5 will scan the product guide next.</p>
+                <h2 id="room-step-confirm-title">Continue to QR generation?</h2>
+                <p>The room list is confirmed. We can move to the QR generation step next.</p>
               </div>
             </header>
 
             <div className="staff-modal-form">
               <p style={{ fontSize: 13, lineHeight: 1.6, margin: 0 }}>
-                Before moving ahead, please confirm that the detected rooms are correct. If yes, we will jump to the product guide upload step.
+                Before moving ahead, please confirm that the detected rooms are correct. If yes, we will open the QR step next.
               </p>
             </div>
 
@@ -239,41 +220,6 @@ export function CreateDisplayHomePage() {
                 Not yet
               </button>
               <button className="primary" onClick={confirmRoomStepNext} type="button">
-                Confirm and continue
-              </button>
-            </footer>
-          </section>
-        </div>
-      ) : null}
-
-      {isColourStepConfirmOpen ? (
-        <div className="staff-modal-overlay" onClick={cancelColourStepNext} role="presentation">
-          <section
-            aria-labelledby="colour-step-confirm-title"
-            aria-modal="true"
-            className="staff-modal create-home-confirm-modal"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-          >
-            <header>
-              <span><SparklesIcon size={20} /></span>
-              <div>
-                <h2 id="colour-step-confirm-title">Continue to product results?</h2>
-                <p>Your colour review is ready. Step 7 will move into extracted product results next.</p>
-              </div>
-            </header>
-
-            <div className="staff-modal-form">
-              <p style={{ fontSize: 13, lineHeight: 1.6, margin: 0 }}>
-                Please confirm this review is complete before we proceed. Once confirmed, we’ll open the product results step.
-              </p>
-            </div>
-
-            <footer>
-              <button onClick={cancelColourStepNext} type="button">
-                Not yet
-              </button>
-              <button className="primary" onClick={confirmColourStepNext} type="button">
                 Confirm and continue
               </button>
             </footer>

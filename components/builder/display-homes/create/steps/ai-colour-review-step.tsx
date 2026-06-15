@@ -58,9 +58,50 @@ type KitchenModalState = {
   tiles: Tile[];
 } | null;
 
+type ManualSectionDraft = {
+  title: string;
+  standardLabel: string;
+  standardValue: string;
+  upgradeLabel: string;
+  upgradeValue: string;
+};
+
+type ManualTileDraft = {
+  sectionTitle: string;
+  sectionKey: string;
+  groupKey: string;
+  groupLabel: string;
+  label: string;
+  value: string;
+  color: string;
+  variant: NonNullable<Tile["variant"]>;
+};
+
+type ManualSection = Section & {
+  id: string;
+  isManual: true;
+};
+
 const DOOR_FURNITURE_SECTION_TITLE = "Door Furniture";
 const DOOR_FURNITURE_FINISH_GROUP_KEY = "finish";
 const DEFAULT_DOOR_FINISH = "Brushed Brass";
+const EMPTY_MANUAL_SECTION: ManualSectionDraft = {
+  title: "New block",
+  standardLabel: "Standard finish",
+  standardValue: "Standard finish",
+  upgradeLabel: "Upgrade finish",
+  upgradeValue: "Upgrade finish",
+};
+const EMPTY_MANUAL_TILE: ManualTileDraft = {
+  sectionTitle: "Exterior",
+  sectionKey: "Exterior",
+  groupKey: "standard",
+  groupLabel: "Standard",
+  label: "New tile",
+  value: "New tile",
+  color: "#d9d0c6",
+  variant: "texture",
+};
 
 const tabConfigs: Record<ColourReviewTab, TabConfig> = {
   Exterior: {
@@ -869,6 +910,12 @@ export function AiColourCombinationReviewStep() {
   );
   const [doorFinishByProduct, setDoorFinishByProduct] = useState<FinishMap>(() => buildInitialDoorFinishMap());
   const [isDoorFurnitureModalOpen, setIsDoorFurnitureModalOpen] = useState(false);
+  const [isCreateNewModalOpen, setIsCreateNewModalOpen] = useState(false);
+  const [manualSectionDraft, setManualSectionDraft] = useState<ManualSectionDraft>(EMPTY_MANUAL_SECTION);
+  const [manualSections, setManualSections] = useState<ManualSection[]>([]);
+  const [isAddTileModalOpen, setIsAddTileModalOpen] = useState(false);
+  const [manualTileDraft, setManualTileDraft] = useState<ManualTileDraft>(EMPTY_MANUAL_TILE);
+  const [manualTilesByGroup, setManualTilesByGroup] = useState<Record<string, Tile[]>>({});
 
   const activeConfig = useMemo(() => tabConfigs[activeTab], [activeTab]);
   const activeKitchenModalSelection = activeKitchenModal ? kitchenSelectionsByKey[activeKitchenModal.groupKey] ?? activeKitchenModal.tiles[0]?.value ?? "" : "";
@@ -877,6 +924,10 @@ export function AiColourCombinationReviewStep() {
     tabConfigs.Exterior.sections
       .find((section) => section.title === DOOR_FURNITURE_SECTION_TITLE)
       ?.groups.find((group) => group.key === DOOR_FURNITURE_FINISH_GROUP_KEY)?.tiles ?? [];
+  const visibleSections = activeTab === "Exterior" ? [...activeConfig.sections, ...manualSections] : activeConfig.sections;
+  const activeManualTileSection = visibleSections.find(
+    (section) => ("id" in section ? section.id : section.title) === manualTileDraft.sectionKey,
+  );
 
   return (
     <div className={styles.shell}>
@@ -913,9 +964,18 @@ export function AiColourCombinationReviewStep() {
         })}
       </nav>
 
+      {activeTab === "Exterior" ? (
+        <div className={styles.tabActions}>
+          <button className={styles.createNewButton} onClick={() => setIsCreateNewModalOpen(true)} type="button">
+            <SparklesIcon size={16} />
+            Create new
+          </button>
+        </div>
+      ) : null}
+
       <main className={styles.content}>
-        {activeConfig.sections.map((section) => (
-          <article className={styles.sectionCard} key={`${activeTab}-${section.title}`}>
+        {visibleSections.map((section, sectionIndex) => (
+          <article className={styles.sectionCard} key={`${activeTab}-${"id" in section ? section.id : `${section.title}-${sectionIndex}`}`}>
             <header className={styles.sectionHeader}>
               <div className={styles.sectionTitle}>
                 <span className={styles.sectionIcon} aria-hidden="true">
@@ -923,6 +983,28 @@ export function AiColourCombinationReviewStep() {
                 </span>
                 <h2>{section.title}</h2>
               </div>
+              <button
+                className={styles.sectionActionButton}
+                onClick={() => {
+                  const sectionKey = "id" in section ? section.id : section.title;
+                  const firstGroup = section.groups[0];
+                  setManualTileDraft({
+                    sectionTitle: section.title,
+                    sectionKey,
+                    groupKey: firstGroup?.key ?? "standard",
+                    groupLabel: firstGroup?.label ?? "Standard",
+                    label: "New tile",
+                    value: "New tile",
+                    color: "#d9d0c6",
+                    variant: "texture",
+                  });
+                  setIsAddTileModalOpen(true);
+                }}
+                type="button"
+              >
+                <SparklesIcon size={14} />
+                Add tile
+              </button>
             </header>
 
             {(() => {
@@ -934,17 +1016,20 @@ export function AiColourCombinationReviewStep() {
               return (
                 <div className={styles.sectionGrid} style={{ gridTemplateColumns: `repeat(${visibleGroups.length}, minmax(0, 1fr))` }}>
                   {visibleGroups.map((group, groupIndex) => {
-                const groupKey = `${activeTab}:${section.title}:${group.key}`;
+                const sectionKey = "id" in section ? section.id : section.title;
+                const groupKey = `${activeTab}:${sectionKey}:${group.key}`;
                 const isDoorFurnitureSection = activeTab === "Exterior" && section.title === DOOR_FURNITURE_SECTION_TITLE;
                 const isDoorFurnitureProductGroup = isDoorFurnitureSection && group.key !== DOOR_FURNITURE_FINISH_GROUP_KEY;
                 const isKitchenSection = activeTab === "Kitchen";
-                const selectedKitchenTile = kitchenSelectionsByKey[groupKey] ?? group.defaultSelection ?? group.tiles[0]?.value ?? "";
+                const manualTilesForGroup = manualTilesByGroup[groupKey] ?? [];
+                const displayedTiles = [...group.tiles, ...manualTilesForGroup];
+                const selectedKitchenTile = kitchenSelectionsByKey[groupKey] ?? group.defaultSelection ?? displayedTiles[0]?.value ?? "";
 
                 return (
                   <div className={`${styles.group} ${groupIndex > 0 ? styles.groupDivider : ""}`} key={groupKey}>
                     <div className={styles.groupLabel}>{group.label}</div>
                     <div className={styles.tileGrid}>
-                      {group.tiles.map((tile) => {
+                      {displayedTiles.map((tile) => {
                         const tileKey = `${groupKey}:${tile.value}`;
                         const isChecked = isDoorFurnitureProductGroup
                           ? true
@@ -973,7 +1058,7 @@ export function AiColourCombinationReviewStep() {
                                   sectionTitle: section.title,
                                   groupKey,
                                   groupLabel: group.label,
-                                  tiles: group.tiles,
+                                  tiles: displayedTiles,
                                 });
                                 return;
                               }
@@ -1032,6 +1117,306 @@ export function AiColourCombinationReviewStep() {
           </article>
         ))}
       </main>
+
+      {isCreateNewModalOpen ? (
+        <div className={styles.modalOverlay} onClick={() => setIsCreateNewModalOpen(false)} role="presentation">
+          <section aria-labelledby="create-new-block-title" aria-modal="true" className={styles.modal} onClick={(event) => event.stopPropagation()} role="dialog">
+            <header className={styles.modalHeader}>
+              <div>
+                <p className={styles.modalEyebrow}>Manual exterior block</p>
+                <h3 id="create-new-block-title">Create new block</h3>
+                <p className={styles.modalDescription}>
+                  Add a new roofing, bricks or facade block manually. The block will appear inside the Exterior tab.
+                </p>
+              </div>
+              <button aria-label="Close create new block modal" className={styles.modalCloseButton} onClick={() => setIsCreateNewModalOpen(false)} type="button">
+                <XIcon size={18} />
+              </button>
+            </header>
+
+            <div className={styles.createModalForm}>
+              <label className={styles.createModalField}>
+                <span>Block title</span>
+                <input
+                  onChange={(event) => setManualSectionDraft((current) => ({ ...current, title: event.target.value }))}
+                  placeholder="e.g. Roofing"
+                  value={manualSectionDraft.title}
+                />
+              </label>
+
+              <div className={styles.createModalGrid}>
+                <label className={styles.createModalField}>
+                  <span>Standard label</span>
+                  <input
+                    onChange={(event) => setManualSectionDraft((current) => ({ ...current, standardLabel: event.target.value }))}
+                    placeholder="e.g. Colorbond Monument"
+                    value={manualSectionDraft.standardLabel}
+                  />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Standard value</span>
+                  <input
+                    onChange={(event) => setManualSectionDraft((current) => ({ ...current, standardValue: event.target.value }))}
+                    placeholder="e.g. Colorbond Monument"
+                    value={manualSectionDraft.standardValue}
+                  />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Upgrade label</span>
+                  <input
+                    onChange={(event) => setManualSectionDraft((current) => ({ ...current, upgradeLabel: event.target.value }))}
+                    placeholder="e.g. Matte Black"
+                    value={manualSectionDraft.upgradeLabel}
+                  />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Upgrade value</span>
+                  <input
+                    onChange={(event) => setManualSectionDraft((current) => ({ ...current, upgradeValue: event.target.value }))}
+                    placeholder="e.g. Matte Black"
+                    value={manualSectionDraft.upgradeValue}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className={styles.createModalPreview}>
+              <div className={styles.createModalPreviewHeader}>
+                <strong>{manualSectionDraft.title || "New block"}</strong>
+                <span>Preview</span>
+              </div>
+              <div className={styles.createModalPreviewGrid}>
+                <article>
+                  <small>Standard</small>
+                  <strong>{manualSectionDraft.standardLabel || "Standard finish"}</strong>
+                  <span>{manualSectionDraft.standardValue || "Standard finish"}</span>
+                </article>
+                <article>
+                  <small>Upgrades</small>
+                  <strong>{manualSectionDraft.upgradeLabel || "Upgrade finish"}</strong>
+                  <span>{manualSectionDraft.upgradeValue || "Upgrade finish"}</span>
+                </article>
+              </div>
+            </div>
+
+            <footer className={styles.createModalFooter}>
+              <button onClick={() => setIsCreateNewModalOpen(false)} type="button">Cancel</button>
+              <button
+                onClick={() => {
+                  const title = manualSectionDraft.title.trim() || "New block";
+                  const standardLabel = manualSectionDraft.standardLabel.trim() || "Standard finish";
+                  const standardValue = manualSectionDraft.standardValue.trim() || standardLabel;
+                  const upgradeLabel = manualSectionDraft.upgradeLabel.trim() || "Upgrade finish";
+                  const upgradeValue = manualSectionDraft.upgradeValue.trim() || upgradeLabel;
+
+                  const newSection: ManualSection = {
+                    id: `${Date.now()}`,
+                    isManual: true,
+                    title,
+                    icon: HomeIcon,
+                    groups: [
+                      {
+                        key: "standard",
+                        label: "Standard",
+                        tiles: [
+                          {
+                            label: standardLabel,
+                            value: standardValue,
+                            color: "#d9d0c6",
+                            variant: "texture",
+                          },
+                        ],
+                      },
+                      {
+                        key: "upgrades",
+                        label: "Upgrades",
+                        tiles: [
+                          {
+                            label: upgradeLabel,
+                            value: upgradeValue,
+                            color: "#9c948a",
+                            variant: "texture",
+                          },
+                        ],
+                      },
+                    ],
+                  };
+
+                  setManualSections((current) => [...current, newSection]);
+                  setManualSectionDraft(EMPTY_MANUAL_SECTION);
+                  setIsCreateNewModalOpen(false);
+                }}
+                type="button"
+              >
+                Add block
+              </button>
+            </footer>
+          </section>
+        </div>
+      ) : null}
+
+      {isAddTileModalOpen ? (
+        <div className={styles.modalOverlay} onClick={() => setIsAddTileModalOpen(false)} role="presentation">
+          <section
+            aria-labelledby="add-tile-modal-title"
+            aria-modal="true"
+            className={styles.modal}
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <header className={styles.modalHeader}>
+              <div>
+                <p className={styles.modalEyebrow}>Manual tile</p>
+                <h3 id="add-tile-modal-title">{manualTileDraft.sectionTitle || "Add tile"}</h3>
+                <p className={styles.modalDescription}>
+                  Add a new tile inside an existing block. Pick the section and group, then save it to the current tab.
+                </p>
+              </div>
+              <button aria-label="Close add tile modal" className={styles.modalCloseButton} onClick={() => setIsAddTileModalOpen(false)} type="button">
+                <XIcon size={18} />
+              </button>
+            </header>
+
+            <div className={styles.createModalForm}>
+              <div className={styles.createModalGrid}>
+                <label className={styles.createModalField}>
+                  <span>Section</span>
+                  <input readOnly value={manualTileDraft.sectionTitle || "Existing block"} />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Group</span>
+                  <select
+                    value={manualTileDraft.groupKey}
+                    onChange={(event) => {
+                      const nextGroupKey = event.target.value;
+                      const nextGroup = activeManualTileSection?.groups.find((group) => group.key === nextGroupKey);
+
+                      setManualTileDraft((current) => ({
+                        ...current,
+                        groupKey: nextGroupKey,
+                        groupLabel: nextGroup?.label ?? nextGroupKey,
+                      }));
+                    }}
+                  >
+                    {(activeManualTileSection?.groups ?? []).map((group) => (
+                      <option key={`${manualTileDraft.sectionKey}-${group.key}`} value={group.key}>
+                        {group.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Tile label</span>
+                  <input
+                    onChange={(event) => setManualTileDraft((current) => ({ ...current, label: event.target.value }))}
+                    placeholder="e.g. New Monument"
+                    value={manualTileDraft.label}
+                  />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Tile value</span>
+                  <input
+                    onChange={(event) => setManualTileDraft((current) => ({ ...current, value: event.target.value }))}
+                    placeholder="e.g. Colorbond New Monument"
+                    value={manualTileDraft.value}
+                  />
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Colour</span>
+                  <div className={styles.colorInputRow}>
+                    <input
+                      aria-label="Pick colour"
+                      className={styles.colorPicker}
+                      onChange={(event) => setManualTileDraft((current) => ({ ...current, color: event.target.value }))}
+                      type="color"
+                      value={manualTileDraft.color}
+                    />
+                    <input
+                      onChange={(event) => setManualTileDraft((current) => ({ ...current, color: event.target.value }))}
+                      placeholder="#d9d0c6"
+                      value={manualTileDraft.color}
+                    />
+                  </div>
+                </label>
+                <label className={styles.createModalField}>
+                  <span>Visual style</span>
+                  <select
+                    value={manualTileDraft.variant}
+                    onChange={(event) =>
+                      setManualTileDraft((current) => ({
+                        ...current,
+                        variant: event.target.value as ManualTileDraft["variant"],
+                      }))
+                    }
+                  >
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                    <option value="texture">Texture</option>
+                    <option value="wood">Wood</option>
+                    <option value="metal">Metal</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div className={styles.createModalPreview}>
+              <div className={styles.createModalPreviewHeader}>
+                <strong>{manualTileDraft.label || "New tile"}</strong>
+                <span>Preview</span>
+              </div>
+              <div className={styles.createModalPreviewGrid}>
+                <article>
+                  <small>Section</small>
+                  <strong>{manualTileDraft.sectionTitle || "Existing block"}</strong>
+                  <span>{manualTileDraft.groupLabel || "Standard"}</span>
+                </article>
+                <article>
+                  <small>Tile</small>
+                  <strong>{manualTileDraft.label || "New tile"}</strong>
+                  <span>{manualTileDraft.value || "New tile"}</span>
+                </article>
+              </div>
+            </div>
+
+            <footer className={styles.createModalFooter}>
+              <button onClick={() => setIsAddTileModalOpen(false)} type="button">Cancel</button>
+              <button
+                onClick={() => {
+                  const sectionKey = manualTileDraft.sectionKey;
+                  const nextTile: Tile = {
+                    label: manualTileDraft.label.trim() || "New tile",
+                    value: manualTileDraft.value.trim() || manualTileDraft.label.trim() || "New tile",
+                    color: manualTileDraft.color.trim() || "#d9d0c6",
+                    variant: manualTileDraft.variant,
+                  };
+
+                  const targetGroupKey = manualTileDraft.groupKey;
+                  const tileGroupKey = `${activeTab}:${sectionKey}:${targetGroupKey}`;
+                  const targetGroup = activeManualTileSection?.groups.find((group) => group.key === targetGroupKey);
+
+                  setManualTilesByGroup((current) => ({
+                    ...current,
+                    [tileGroupKey]: [...(current[tileGroupKey] ?? []), nextTile],
+                  }));
+
+                  setManualTileDraft((current) => ({
+                    ...current,
+                    label: "New tile",
+                    value: "New tile",
+                    color: "#d9d0c6",
+                    variant: "texture",
+                    groupLabel: targetGroup?.label ?? current.groupLabel,
+                  }));
+                  setIsAddTileModalOpen(false);
+                }}
+                type="button"
+              >
+                Add tile
+              </button>
+            </footer>
+          </section>
+        </div>
+      ) : null}
 
       {isDoorFurnitureModalOpen ? (
         <div className={styles.modalOverlay} onClick={() => setIsDoorFurnitureModalOpen(false)} role="presentation">
