@@ -10,7 +10,7 @@ import { ProductGuideUploadStep } from "@/components/builder/product-guide/steps
 import { ProductGuideSuccessStep } from "@/components/builder/product-guide/steps/product-guide-success-step";
 import { productGuideSteps, type ProductGuideStepId } from "@/components/builder/product-guide/workflow-data";
 
-type ProductGuideStepComponent = ComponentType<Record<string, unknown>>;
+type ProductGuideStepComponent = ComponentType<any>;
 
 const stepComponents: Record<ProductGuideStepId, ProductGuideStepComponent> = {
   upload: ProductGuideUploadStep,

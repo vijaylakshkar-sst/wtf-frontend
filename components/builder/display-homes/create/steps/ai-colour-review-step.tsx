@@ -986,7 +986,7 @@ export function AiColourCombinationReviewStep() {
               <button
                 className={styles.sectionActionButton}
                 onClick={() => {
-                  const sectionKey = "id" in section ? section.id : section.title;
+                  const sectionKey = "id" in section ? String(section.id) : section.title;
                   const firstGroup = section.groups[0];
                   setManualTileDraft({
                     sectionTitle: section.title,
