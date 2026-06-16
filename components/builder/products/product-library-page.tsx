@@ -38,8 +38,8 @@ export function ProductLibraryPage() {
             <span>Manage, verify and map products for Tarneit 42 display home.</span>
           </div>
           <div className="products-actions">
-            <button onClick={() => setNotice("AI catalogue scan started.")} type="button"><SparklesIcon size={17} /> AI scan catalogue</button>
-            <Link className="purple" href="/builder/products/upload-pdf"><UploadIcon size={17} /> Upload PDF</Link>
+            {/* <button onClick={() => setNotice("AI catalogue scan started.")} type="button"><SparklesIcon size={17} /> AI scan catalogue</button>
+            <Link className="purple" href="/builder/products/upload-pdf"><UploadIcon size={17} /> Upload PDF</Link> */}
             <Link className="gold" href="/builder/products/add"><PlusIcon size={17} /> Add product</Link>
           </div>
         </header>

@@ -15,14 +15,32 @@ export function Field({ label, children, className = "" }: FieldProps) {
   );
 }
 
-export function ToggleRow({ title, note, checked = false }: { title: string; note?: string; checked?: boolean }) {
+export function ToggleRow({
+  title,
+  note,
+  checked = false,
+  onToggle,
+}: {
+  title: string;
+  note?: string;
+  checked?: boolean;
+  onToggle?: () => void;
+}) {
   return (
     <div className="create-home-toggle-row">
       <div>
         <strong>{title}</strong>
         {note ? <small>{note}</small> : null}
       </div>
-      <span className={`create-home-switch ${checked ? "is-on" : ""}`} aria-hidden="true"><i /></span>
+      <button
+        aria-pressed={checked}
+        aria-label={title}
+        className={`create-home-switch ${checked ? "is-on" : ""}`}
+        onClick={onToggle}
+        type="button"
+      >
+        <i aria-hidden="true" />
+      </button>
     </div>
   );
 }
