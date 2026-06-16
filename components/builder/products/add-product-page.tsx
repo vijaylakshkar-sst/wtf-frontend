@@ -199,17 +199,7 @@ export function AddProductPage() {
 
           {submissionView === "none" && uploadStage !== "published" && source === "own" && ownMode !== "manual" && uploadStage === "form" ? (
             <>
-              <section className="manual-product-section manual-product-upload-panel">
-                <h3>Upload your {ownMode === "csv" ? "CSV" : "invoice"}</h3>
-                <p className="manual-product-upload-subtitle">Upload your {ownMode === "csv" ? "CSV" : "invoice"} to start extraction.</p>
-
-                <button className="manual-product-upload-dropzone" onClick={() => setNotice("File picker opened.")} type="button">
-                  <UploadIcon size={30} />
-                  <strong>Drag & drop your {ownMode === "csv" ? "CSV" : "invoice"}</strong>
-                  <small>{ownMode === "csv" ? "CSV file" : "Invoice file"}</small>
-                  <em>Browse file</em>
-                </button>
-
+             <section className="manual-product-section manual-product-upload-panel">
                 <label className="manual-product-upload-select">
                   Assign to display home
                   <select defaultValue="Tarneit 42 - The Whitmore">
@@ -217,6 +207,18 @@ export function AddProductPage() {
                     <option>Hoppers Crossing - The Delray</option>
                   </select>
                 </label>
+             </section>
+              <section className="manual-product-section manual-product-upload-panel">
+                <h3>Upload your {ownMode === "csv" ? "CSV" : "invoice"}</h3>                
+                
+                <p className="manual-product-upload-subtitle">Upload your {ownMode === "csv" ? "CSV" : "invoice"} to start extraction.</p>
+
+                <button className="manual-product-upload-dropzone" onClick={() => setNotice("File picker opened.")} type="button">
+                  <UploadIcon size={30} />
+                  <strong>Drag & drop your {ownMode === "csv" ? "CSV" : "invoice"}</strong>
+                  <small>{ownMode === "csv" ? "CSV file" : "Invoice file"}</small>
+                  <em>Browse file</em>
+                </button>               
 
                 <button className="manual-product-upload-primary" onClick={() => setUploadStage("processing")} type="button">
                   <SparklesIcon size={15} /> Upload & start AI extraction
