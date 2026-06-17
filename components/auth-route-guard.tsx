@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   clearAuthSession,
+  authApi,
+  clearLegacyAuthTokens,
   getRedirectPathForRoles,
-  getStoredAccessToken,
-  getStoredAuthUser,
+  updateStoredAuthUser,
 } from "@/lib/api";
 import { canAccessBuilderRoute, getFirstAccessibleBuilderPath } from "@/lib/builder-access";
 
@@ -39,10 +40,14 @@ export function AuthRouteGuard({ children }: { children: React.ReactNode }) {
   const [allowedPath, setAllowedPath] = useState<string | null>(null);
 
   useEffect(() => {
+    clearLegacyAuthTokens();
     let allowTimer: number | null = null;
+    let isCurrent = true;
     const allowPath = () => {
       allowTimer = window.setTimeout(() => {
-        setAllowedPath(pathname);
+        if (isCurrent) {
+          setAllowedPath(pathname);
+        }
       }, 0);
     };
 
@@ -51,43 +56,56 @@ export function AuthRouteGuard({ children }: { children: React.ReactNode }) {
     if (!requiredRole) {
       allowPath();
       return () => {
+        isCurrent = false;
         if (allowTimer !== null) {
           window.clearTimeout(allowTimer);
         }
       };
     }
 
-    const user = getStoredAuthUser();
-    const accessToken = getStoredAccessToken();
+    const bootstrapAndAuthorize = async () => {
+      try {
+        const response = await authApi.me();
+        const user = response.data.user;
 
-    if (!user || !accessToken) {
-      clearAuthSession();
-      router.replace("/sign-in");
-      return;
-    }
+        if (!isCurrent) {
+          return;
+        }
 
-    if (user.status !== "active") {
-      clearAuthSession();
-      router.replace("/sign-in");
-      return;
-    }
+        updateStoredAuthUser(user);
 
-    const roles = user.roles?.map((role) => role.name) || [];
+        if (user.status !== "active") {
+          clearAuthSession();
+          router.replace("/sign-in");
+          return;
+        }
 
-    if (!roles.includes(requiredRole)) {
-      router.replace(getRedirectPathForRoles(roles));
-      return;
-    }
+        const roles = user.roles?.map((role) => role.name) || [];
 
-    if (requiredRole === "builder" && !canAccessBuilderRoute(user, pathname)) {
-      const fallbackPath = getFirstAccessibleBuilderPath(user);
-      router.replace(fallbackPath || "/sign-in");
-      return;
-    }
+        if (!roles.includes(requiredRole)) {
+          router.replace(getRedirectPathForRoles(roles));
+          return;
+        }
 
-    allowPath();
+        if (requiredRole === "builder" && !canAccessBuilderRoute(user, pathname)) {
+          const fallbackPath = getFirstAccessibleBuilderPath(user);
+          router.replace(fallbackPath || "/sign-in");
+          return;
+        }
+
+        allowPath();
+      } catch {
+        if (isCurrent) {
+          clearAuthSession();
+          router.replace("/sign-in");
+        }
+      }
+    };
+
+    void bootstrapAndAuthorize();
 
     return () => {
+      isCurrent = false;
       if (allowTimer !== null) {
         window.clearTimeout(allowTimer);
       }

@@ -2,21 +2,39 @@ import type { LoginResponse } from "./auth.types";
 import type { AuthUser } from "../types";
 
 const storageKeys = {
-  accessToken: "wtf_access_token",
-  refreshToken: "wtf_refresh_token",
   user: "wtf_user",
 } as const;
+
+const getPreferredStorage = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (window.sessionStorage.getItem(storageKeys.user) !== null) {
+    return window.sessionStorage;
+  }
+
+  if (window.localStorage.getItem(storageKeys.user) !== null) {
+    return window.localStorage;
+  }
+
+  return window.sessionStorage;
+};
+
+export const clearLegacyAuthTokens = () => {
+  window.localStorage.removeItem("wtf_access_token");
+  window.sessionStorage.removeItem("wtf_access_token");
+  window.localStorage.removeItem("wtf_refresh_token");
+  window.sessionStorage.removeItem("wtf_refresh_token");
+};
 
 export const saveAuthSession = (session: LoginResponse, rememberMe: boolean) => {
   const storage = rememberMe ? window.localStorage : window.sessionStorage;
   const otherStorage = rememberMe ? window.sessionStorage : window.localStorage;
 
-  otherStorage.removeItem(storageKeys.accessToken);
-  otherStorage.removeItem(storageKeys.refreshToken);
+  clearLegacyAuthTokens();
   otherStorage.removeItem(storageKeys.user);
 
-  storage.setItem(storageKeys.accessToken, session.accessToken);
-  storage.setItem(storageKeys.refreshToken, session.refreshToken);
   storage.setItem(storageKeys.user, JSON.stringify(session.user));
 };
 
@@ -25,13 +43,14 @@ export const updateAuthSession = (session: LoginResponse) => {
     return;
   }
 
-  const storage =
-    window.sessionStorage.getItem(storageKeys.refreshToken) !== null
-      ? window.sessionStorage
-      : window.localStorage;
+  const storage = getPreferredStorage();
 
-  storage.setItem(storageKeys.accessToken, session.accessToken);
-  storage.setItem(storageKeys.refreshToken, session.refreshToken);
+  clearLegacyAuthTokens();
+
+  if (!storage) {
+    return;
+  }
+
   storage.setItem(storageKeys.user, JSON.stringify(session.user));
 };
 
@@ -70,19 +89,14 @@ export const getStoredAuthUser = (): AuthUser | null => {
   }
 };
 
-export const getStoredAccessToken = () => getStoredValue(storageKeys.accessToken);
-
-export const getStoredRefreshToken = () => getStoredValue(storageKeys.refreshToken);
-
 export const clearAuthSession = () => {
   if (typeof window === "undefined") {
     return;
   }
 
-  Object.values(storageKeys).forEach((key) => {
-    window.localStorage.removeItem(key);
-    window.sessionStorage.removeItem(key);
-  });
+  clearLegacyAuthTokens();
+  window.localStorage.removeItem(storageKeys.user);
+  window.sessionStorage.removeItem(storageKeys.user);
 };
 
 export const getRedirectPathForRoles = (roles: string[]) => {

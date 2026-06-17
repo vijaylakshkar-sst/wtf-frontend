@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogoutIcon } from "@/components/icons";
-import { authApi, clearAuthSession, getStoredRefreshToken } from "@/lib/api";
+import { authApi, clearAuthSession } from "@/lib/api";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export function LogoutButton() {
     setIsLoggingOut(true);
 
     try {
-      await authApi.logout({ refreshToken: getStoredRefreshToken() });
+      await authApi.logout();
     } catch {
       // Local session should still be cleared if the server session is already gone.
     } finally {

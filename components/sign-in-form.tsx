@@ -12,6 +12,7 @@ import {
   validateLogin,
   type LoginForm,
 } from "@/lib/api";
+import { getFirstAccessibleBuilderPath } from "@/lib/builder-access";
 
 type LoginErrors = Partial<Record<keyof LoginForm | "form", string>>;
 
@@ -54,7 +55,11 @@ export function SignInForm() {
 
       saveAuthSession(response.data, form.rememberMe);
       const roles = user.roles?.map((role) => role.name) || [];
-      router.push(getRedirectPathForRoles(roles));
+      const builderRedirect = roles.includes("builder")
+        ? getFirstAccessibleBuilderPath(user)
+        : null;
+
+      router.push(builderRedirect || getRedirectPathForRoles(roles));
     } catch (error) {
       setErrors({ form: getErrorMessage(error, "Unable to sign in. Please try again.") });
     } finally {

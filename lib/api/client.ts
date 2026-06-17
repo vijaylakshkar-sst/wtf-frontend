@@ -1,8 +1,6 @@
 import { API_BASE_URL } from "./config";
 import {
   clearAuthSession,
-  getStoredAccessToken,
-  getStoredRefreshToken,
   updateAuthSession,
 } from "./auth/auth-session";
 import { apiRoutes } from "./config";
@@ -34,6 +32,7 @@ const buildRequest = (options: ApiRequestOptions = {}) => {
 
   return {
     ...options,
+    credentials: options.credentials ?? "include",
     headers,
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
   };
@@ -42,29 +41,17 @@ const buildRequest = (options: ApiRequestOptions = {}) => {
 let refreshPromise: Promise<string | null> | null = null;
 
 const performRefresh = async () => {
-  const refreshToken = getStoredRefreshToken();
-
-  if (!refreshToken) {
-    return null;
-  }
-
   const response = await fetch(`${API_BASE_URL}${apiRoutes.auth.refresh}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ refreshToken }),
+    credentials: "include",
   });
 
   const payload = await parseJson<LoginResponse>(response);
 
   if (!response.ok || payload.status === "error") {
-    const latestRefreshToken = getStoredRefreshToken();
-
-    if (latestRefreshToken && latestRefreshToken !== refreshToken) {
-      return getStoredAccessToken();
-    }
-
     return null;
   }
 
@@ -72,21 +59,14 @@ const performRefresh = async () => {
   return payload.data.accessToken;
 };
 
-const refreshAccessToken = async () => {
+export const refreshAuthSession = async () => {
   if (!refreshPromise) {
     refreshPromise = performRefresh().finally(() => {
       refreshPromise = null;
     });
   }
 
-  const nextAccessToken = await refreshPromise;
-
-  if (!nextAccessToken) {
-    clearAuthSession();
-    redirectToSignIn();
-  }
-
-  return nextAccessToken;
+  return refreshPromise;
 };
 
 const redirectToSignIn = () => {
@@ -105,11 +85,10 @@ export const apiClient = async <TData>(path: string, options: ApiRequestOptions 
   const payload = await parseJson<TData>(response);
 
   if (response.status === 401 && path !== apiRoutes.auth.login && path !== apiRoutes.auth.refresh) {
-    const nextAccessToken = await refreshAccessToken();
+    const nextAccessToken = await refreshAuthSession();
 
     if (nextAccessToken) {
       const retryOptions = buildRequest(options);
-      retryOptions.headers.set("Authorization", `Bearer ${nextAccessToken}`);
 
       const retryResponse = await fetch(`${API_BASE_URL}${path}`, retryOptions);
       const retryPayload = await parseJson<TData>(retryResponse);
@@ -121,6 +100,8 @@ export const apiClient = async <TData>(path: string, options: ApiRequestOptions 
       return retryPayload;
     }
 
+    clearAuthSession();
+    redirectToSignIn();
     throw new ApiError("Your session has expired. Please sign in again.", 401, null);
   }
 

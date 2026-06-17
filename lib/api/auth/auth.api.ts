@@ -1,12 +1,10 @@
-import { apiClient } from "../client";
+import { apiClient, refreshAuthSession } from "../client";
 import { apiRoutes } from "../config";
-import { getStoredAccessToken } from "./auth-session";
 import { validateEmail, type ValidationErrors } from "../validation";
 import type {
   ChangePasswordPayload,
   ForgotPasswordPayload,
   ForgotPasswordResponse,
-  LogoutPayload,
   LoginForm,
   LoginPayload,
   LoginResponse,
@@ -14,16 +12,6 @@ import type {
   ResetPasswordPayload,
   UpdateProfilePayload,
 } from "./auth.types";
-
-const withAuthHeaders = () => {
-  const token = getStoredAccessToken();
-
-  return token
-    ? {
-        Authorization: `Bearer ${token}`,
-      }
-    : undefined;
-};
 
 export const validateLogin = (form: LoginForm) => {
   const errors: ValidationErrors<LoginForm> = {};
@@ -48,20 +36,18 @@ export const toLoginPayload = (form: LoginForm): LoginPayload => ({
 export const authApi = {
   me: () =>
     apiClient<MeResponse>(apiRoutes.auth.me, {
-      headers: withAuthHeaders(),
     }),
   updateProfile: (payload: UpdateProfilePayload) =>
     apiClient<MeResponse>(apiRoutes.auth.me, {
       method: "PUT",
-      headers: withAuthHeaders(),
       body: payload,
     }),
   changePassword: (payload: ChangePasswordPayload) =>
     apiClient<null>(apiRoutes.auth.changePassword, {
       method: "PUT",
-      headers: withAuthHeaders(),
       body: payload,
     }),
+  refreshSession: () => refreshAuthSession(),
   login: (form: LoginForm) =>
     apiClient<LoginResponse>(apiRoutes.auth.login, {
       method: "POST",
@@ -77,9 +63,8 @@ export const authApi = {
       method: "POST",
       body: payload,
     }),
-  logout: (payload: LogoutPayload) =>
+  logout: () =>
     apiClient<null>(apiRoutes.auth.logout, {
       method: "POST",
-      body: payload,
     }),
 };

@@ -24,11 +24,10 @@ export type {
 export { authApi, toLoginPayload, validateLogin } from "./auth/auth.api";
 export {
   clearAuthSession,
+  clearLegacyAuthTokens,
   getInactiveAccountMessage,
   getRedirectPathForRoles,
-  getStoredAccessToken,
   getStoredAuthUser,
-  getStoredRefreshToken,
   saveAuthSession,
   updateAuthSession,
   updateStoredAuthUser,
@@ -40,7 +39,6 @@ export type {
   LoginForm,
   LoginPayload,
   LoginResponse,
-  LogoutPayload,
   MeResponse,
   ResetPasswordPayload,
   UpdateProfilePayload,
@@ -53,6 +51,7 @@ export {
   validateBuilderRegistrationStepTwo,
 } from "./builders/builders.api";
 export { builderAccessApi } from "./builders/builder-access.api";
+export { refreshAuthSession } from "./client";
 export type {
   BuilderRegistrationForm,
   BuilderRegistrationPayload,

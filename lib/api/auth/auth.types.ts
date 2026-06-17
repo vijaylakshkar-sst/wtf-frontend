@@ -13,10 +13,6 @@ export type LoginPayload = {
 
 export type LoginResponse = RegistrationAuthResponse;
 
-export type LogoutPayload = {
-  refreshToken: string | null;
-};
-
 export type MeResponse = {
   user: RegistrationAuthResponse["user"];
 };
