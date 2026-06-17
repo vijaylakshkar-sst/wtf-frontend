@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { BookOpenIcon, CheckIcon, EditIcon, EyeIcon, FileIcon, PlusIcon, SearchIcon, TrashIcon } from "@/components/icons";
 import { useToast } from "@/components/toast-provider";
@@ -31,6 +31,7 @@ export function AdminCmsManagementPage() {
   const [content, setContent] = useState("");
   const [faqRows, setFaqRows] = useState<CmsFaqItem[]>([]);
   const [status, setStatus] = useState<CmsPageStatus>("draft");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -70,6 +71,27 @@ export function AdminCmsManagementPage() {
       isCurrent = false;
     };
   }, [showToast]);
+
+  useEffect(() => {
+    if (!editorRef.current || !activePage) {
+      return;
+    }
+
+    editorRef.current.innerHTML = content;
+  }, [activePage]);
+
+  const filteredPages = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      return pages;
+    }
+
+    return pages.filter((page) => {
+      const haystack = [page.title, page.slug, page.type, page.status].join(" ").toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [pages, searchQuery]);
 
   const selectPage = (page: CmsPage) => {
     setActivePage(page);
@@ -164,7 +186,12 @@ export function AdminCmsManagementPage() {
           </div>
           <label className="admin-search">
             <SearchIcon size={17} />
-            <input aria-label="Search CMS pages" placeholder="Search content pages..." />
+            <input
+              aria-label="Search CMS pages"
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search content pages..."
+              value={searchQuery}
+            />
           </label>
         </header>
 
@@ -181,7 +208,10 @@ export function AdminCmsManagementPage() {
             </header>
             <div>
               {isLoading ? <p>Loading CMS pages...</p> : null}
-              {pages.map((page) => (
+              {!isLoading && filteredPages.length === 0 ? (
+                <p>No CMS pages match your search.</p>
+              ) : null}
+              {filteredPages.map((page) => (
                 <button className={activePage?.id === page.id ? "active" : ""} key={page.id} onClick={() => selectPage(page)} type="button">
                   <FileIcon size={18} />
                   <span><strong>{page.title}</strong><small>{statusLabels[page.status]} - {getUpdatedLabel(page.updatedAt)}</small></span>
@@ -195,9 +225,7 @@ export function AdminCmsManagementPage() {
               <div><h2>{activePage?.title || "CMS page"}</h2><p>Rich editor content area for website CMS copy.</p></div>
               {activePage?.type === "faq" ? (
                 <button onClick={addFaqRow} type="button"><PlusIcon size={16} /> Add row</button>
-              ) : (
-                <button type="button"><EyeIcon size={16} /> Preview</button>
-              )}
+              ) : null}
             </header>
 
             <div className="admin-editor-meta">
@@ -248,8 +276,6 @@ export function AdminCmsManagementPage() {
                   aria-label={`${activePage?.title || "CMS page"} content`}
                   className="admin-editor-surface"
                   contentEditable
-                  dangerouslySetInnerHTML={{ __html: content }}
-                  key={activePage?.slug}
                   onInput={(event) => setContent(event.currentTarget.innerHTML)}
                   ref={editorRef}
                   role="textbox"

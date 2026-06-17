@@ -1,4 +1,5 @@
 export { adminApi } from "./admin/admin.api";
+export { adminContactEnquiriesApi } from "./admin/contact-enquiries.api";
 export { adminCmsApi } from "./admin/cms.api";
 export type {
   AdminDirectoryApiRow,
@@ -14,6 +15,7 @@ export type {
 } from "./admin/admin.types";
 export type {
   CmsFaqItem,
+  CmsPageCreatePayload,
   CmsPage,
   CmsPagePayload,
   CmsPageResponse,
@@ -21,6 +23,16 @@ export type {
   CmsPageStatus,
   CmsPageType,
 } from "./admin/cms.types";
+export type {
+  ContactEnquiriesResponse,
+  ContactEnquiry,
+  ContactEnquiryPriority,
+  ContactEnquiryResponse,
+  ContactEnquiryStatus,
+  ContactEnquiryStatusPayload,
+  ContactEnquiryStats,
+  ContactEnquiryType,
+} from "./admin/contact-enquiries.types";
 export { authApi, toLoginPayload, validateLogin } from "./auth/auth.api";
 export {
   clearAuthSession,

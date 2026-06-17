@@ -34,3 +34,12 @@ export type CmsPagePayload = {
   content?: string;
   faqItems?: CmsFaqItem[];
 };
+
+export type CmsPageCreatePayload = {
+  slug?: string;
+  title: string;
+  type?: CmsPageType;
+  status?: CmsPageStatus;
+  content?: string;
+  faqItems?: CmsFaqItem[];
+};

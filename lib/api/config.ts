@@ -13,6 +13,7 @@ export const apiRoutes = {
   },
   admin: {
     builders: "/admin/builders",
+    contactEnquiries: "/admin/contact-enquiries",
     cmsPages: "/admin/cms-pages",
     suppliers: "/admin/suppliers",
   },
