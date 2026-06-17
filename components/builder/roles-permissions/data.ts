@@ -1,117 +1,100 @@
-export type PermissionAction = "view" | "create" | "edit" | "delete";
-export type ModuleKey = "dashboard" | "displayHomes" | "products" | "leads" | "analytics" | "staff";
-export type RolePermissions = Record<ModuleKey, Record<PermissionAction, boolean>>;
+import type {
+  BuilderPermission,
+  BuilderPermissionAction,
+  BuilderRole,
+  BuilderStaffMember,
+} from "@/lib/api";
 
-export type PermissionModule = {
-  key: ModuleKey;
-  name: string;
-  description: string;
-};
-
-export type BuilderRole = {
-  id: number;
-  name: string;
-  description: string;
-  users: number;
-  permissions: RolePermissions;
-};
-
-export type RoleAssignment = {
-  id: number;
-  name: string;
-  email: string;
-  roleId: number;
-};
-
-export const permissionActions: { key: PermissionAction; label: string }[] = [
+export const permissionActions: { key: BuilderPermissionAction; label: string }[] = [
   { key: "view", label: "View" },
   { key: "create", label: "Create" },
   { key: "edit", label: "Edit" },
   { key: "delete", label: "Delete" },
 ];
 
-export const permissionModules: PermissionModule[] = [
+export const builderModuleOrder = [
   { key: "dashboard", name: "Dashboard", description: "Overview metrics and builder activity" },
   { key: "displayHomes", name: "Display homes", description: "Homes, rooms, floor plans and QR setup" },
+  { key: "productGuide", name: "Product Guide", description: "Guided product setup and review workflow" },
   { key: "products", name: "Products", description: "Product library, mapping and flagged items" },
-  { key: "leads", name: "Leads & Customers", description: "Lead list, customer selections and reviews" },
+  { key: "leadsCustomers", name: "Leads & Customers", description: "Lead list, customer selections and reviews" },
   { key: "analytics", name: "Analytics", description: "Visits, conversion and product performance" },
+  { key: "masters", name: "Masters", description: "Brands, categories, mapping and reference data" },
   { key: "staff", name: "Staff", description: "Team members and access assignments" },
-];
+  { key: "rolesPermissions", name: "Roles & Permissions", description: "Builder role library and access matrix" },
+] as const;
 
-export const initialRoles: BuilderRole[] = [
-  {
-    id: 1,
-    name: "Admin",
-    description: "Full access to all builder portal modules.",
-    users: 1,
-    permissions: createPermissions({
-      dashboard: ["view"],
-      displayHomes: ["view", "create", "edit", "delete"],
-      products: ["view", "create", "edit", "delete"],
-      leads: ["view", "create", "edit", "delete"],
-      analytics: ["view"],
-      staff: ["view", "create", "edit", "delete"],
-    }),
-  },
-  {
-    id: 2,
-    name: "Sales",
-    description: "Manage leads, customers and display home enquiries.",
-    users: 1,
-    permissions: createPermissions({
-      dashboard: ["view"],
-      displayHomes: ["view"],
-      leads: ["view", "create", "edit"],
-    }),
-  },
-  {
-    id: 3,
-    name: "Colour",
-    description: "Maintain selections, products and display home content.",
-    users: 1,
-    permissions: createPermissions({
-      dashboard: ["view"],
-      displayHomes: ["view", "edit"],
-      products: ["view", "create", "edit"],
-    }),
-  },
-  {
-    id: 4,
-    name: "Marketing",
-    description: "Review analytics and manage product visibility.",
-    users: 1,
-    permissions: createPermissions({
-      dashboard: ["view"],
-      displayHomes: ["view"],
-      products: ["view", "edit"],
-      analytics: ["view"],
-    }),
-  },
-];
+export type BuilderModuleKey = (typeof builderModuleOrder)[number]["key"];
 
-export const initialAssignments: RoleAssignment[] = [
-  { id: 1, name: "Jane Smith", email: "jane@acme.com", roleId: 1 },
-  { id: 2, name: "Marcus Lee", email: "marcus@acme.com", roleId: 2 },
-  { id: 3, name: "Priya Nair", email: "priya@acme.com", roleId: 3 },
-  { id: 4, name: "Tom Walsh", email: "tom@acme.com", roleId: 4 },
-];
+export type PermissionMatrix = Record<BuilderModuleKey, Record<BuilderPermissionAction, boolean>>;
 
-export function createBlankPermissions(): RolePermissions {
-  return permissionModules.reduce((modulePermissions, module) => ({
+export type PermissionGroup = {
+  key: BuilderModuleKey;
+  name: string;
+  description: string;
+  permissions: BuilderPermission[];
+};
+
+export type RoleFormState = {
+  name: string;
+  displayName: string;
+  description: string;
+  permissions: PermissionMatrix;
+};
+
+export const createBlankPermissions = (): PermissionMatrix => {
+  return builderModuleOrder.reduce((modulePermissions, module) => ({
     ...modulePermissions,
-    [module.key]: permissionActions.reduce((actions, action) => ({ ...actions, [action.key]: false }), {} as Record<PermissionAction, boolean>),
-  }), {} as RolePermissions);
-}
+    [module.key]: permissionActions.reduce(
+      (actions, action) => ({ ...actions, [action.key]: false }),
+      {} as Record<BuilderPermissionAction, boolean>,
+    ),
+  }), {} as PermissionMatrix);
+};
 
-export function createPermissions(enabled: Partial<Record<ModuleKey, PermissionAction[]>>): RolePermissions {
-  const permissions = createBlankPermissions();
+export const createPermissionMatrix = (permissions: BuilderPermission[]): PermissionMatrix => {
+  const matrix = createBlankPermissions();
 
-  Object.entries(enabled).forEach(([moduleKey, actions]) => {
-    actions?.forEach((action) => {
-      permissions[moduleKey as ModuleKey][action] = true;
-    });
+  permissions.forEach((permission) => {
+    const moduleKey = permission.moduleKey as BuilderModuleKey;
+    const action = permission.action as BuilderPermissionAction;
+
+    if (matrix[moduleKey]) {
+      matrix[moduleKey][action] = true;
+    }
   });
 
-  return permissions;
-}
+  return matrix;
+};
+
+export const groupPermissionsByModule = (permissions: BuilderPermission[]): PermissionGroup[] => {
+  return builderModuleOrder.map((module) => ({
+    ...module,
+    permissions: permissions.filter((permission) => permission.moduleKey === module.key),
+  }));
+};
+
+export const toSelectedPermissionKeys = (permissions: PermissionMatrix) => {
+  return builderModuleOrder.flatMap((module) =>
+    permissionActions
+      .filter((action) => permissions[module.key][action.key])
+      .map((action) => `${module.key}.${action.key}`),
+  );
+};
+
+export const countEnabledPermissions = (permissions: PermissionMatrix) => {
+  return builderModuleOrder.reduce(
+    (total, module) =>
+      total + permissionActions.filter((action) => permissions[module.key][action.key]).length,
+    0,
+  );
+};
+
+export const countAvailablePermissions = (groups: PermissionGroup[]) => {
+  return groups.reduce((total, group) => total + group.permissions.length, 0);
+};
+
+export const getRoleLabel = (role: BuilderRole | null | undefined) => role?.displayName || role?.name || "Unassigned";
+
+export const getStaffName = (staff: BuilderStaffMember) =>
+  [staff.firstName, staff.lastName].filter(Boolean).join(" ");

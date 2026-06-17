@@ -1,10 +1,29 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { getStoredAuthUser } from "@/lib/api";
 import { builderMetrics, chartPoints, recentLeads } from "@/components/builder/data";
 
 export function BuilderOverview() {
+  const user = getStoredAuthUser();
+  const firstName = user?.firstName?.trim() || "there";
+  const [currentHour, setCurrentHour] = useState(() => new Date().getHours());
+
+  useEffect(() => {
+    const syncHour = () => setCurrentHour(new Date().getHours());
+    syncHour();
+
+    const timer = window.setInterval(syncHour, 60_000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const greeting = getGreeting(currentHour);
+
   return (
     <section className="builder-main">
       <div className="builder-welcome">
-        <div><h1>Good morning, Jane</h1><p>Here&apos;s what&apos;s happening with your display homes.</p></div>
+        <div><h1>{greeting}, {firstName}</h1><p>Here&apos;s what&apos;s happening with your display homes.</p></div>
       </div>
       <section className="builder-metrics" aria-label="Builder metrics">
         {builderMetrics.map(({ icon: Icon, label, value, change, positive }) => (
@@ -36,4 +55,16 @@ export function BuilderOverview() {
       </div>
     </section>
   );
+}
+
+function getGreeting(hour: number) {
+  if (hour < 12) {
+    return "Good morning";
+  }
+
+  if (hour < 17) {
+    return "Good afternoon";
+  }
+
+  return "Good evening";
 }

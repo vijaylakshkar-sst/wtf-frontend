@@ -18,6 +18,9 @@ export const apiRoutes = {
   },
   builders: {
     register: "/builders/register",
+    permissions: "/builders/permissions",
+    roles: "/builders/roles",
+    staff: "/builders/staff",
   },
   suppliers: {
     industryCategories: "/suppliers/industry-categories",

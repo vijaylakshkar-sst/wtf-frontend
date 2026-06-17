@@ -8,6 +8,7 @@ import {
   getStoredAccessToken,
   getStoredAuthUser,
 } from "@/lib/api";
+import { canAccessBuilderRoute, getFirstAccessibleBuilderPath } from "@/lib/builder-access";
 
 const publicRoutes = new Set([
   "/",
@@ -75,6 +76,12 @@ export function AuthRouteGuard({ children }: { children: React.ReactNode }) {
 
     if (!roles.includes(requiredRole)) {
       router.replace(getRedirectPathForRoles(roles));
+      return;
+    }
+
+    if (requiredRole === "builder" && !canAccessBuilderRoute(user, pathname)) {
+      const fallbackPath = getFirstAccessibleBuilderPath(user);
+      router.replace(fallbackPath || "/sign-in");
       return;
     }
 

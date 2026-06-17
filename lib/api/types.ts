@@ -14,6 +14,27 @@ export type AuthUserRole = {
   name: string;
 };
 
+export type AuthPermission = {
+  id: string;
+  key: string;
+  moduleKey: string;
+  action: "view" | "create" | "edit" | "delete";
+};
+
+export type BuilderAccountSummary = {
+  id: string;
+  userId?: string | null;
+  companyName: string;
+  tradingName?: string | null;
+};
+
+export type BuilderRoleSummary = {
+  id: string;
+  name: string;
+  displayName?: string;
+  permissions?: AuthPermission[];
+};
+
 export type AuthUser = {
   id: string;
   email: string;
@@ -22,6 +43,9 @@ export type AuthUser = {
   phone?: string | null;
   status: string;
   roles?: AuthUserRole[];
+  builderProfile?: BuilderAccountSummary | null;
+  builderMembership?: BuilderAccountSummary | null;
+  builderRole?: BuilderRoleSummary | null;
 };
 
 export type RegistrationAuthResponse = {

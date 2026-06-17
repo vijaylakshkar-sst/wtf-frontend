@@ -52,11 +52,27 @@ export {
   validateBuilderRegistrationStepOne,
   validateBuilderRegistrationStepTwo,
 } from "./builders/builders.api";
+export { builderAccessApi } from "./builders/builder-access.api";
 export type {
   BuilderRegistrationForm,
   BuilderRegistrationPayload,
   BuilderRegistrationResponse,
 } from "./builders/builders.types";
+export type {
+  BuilderPermission,
+  BuilderPermissionAction,
+  BuilderPermissionsResponse,
+  BuilderRole,
+  BuilderRolePayload,
+  BuilderRoleResponse,
+  BuilderRolesResponse,
+  BuilderStaffAssignmentResponse,
+  BuilderStaffMutationResponse,
+  BuilderStaffMember,
+  BuilderStaffPayload,
+  BuilderStaffResponse,
+  BuilderStaffRolePayload,
+} from "./builders/builder-access.types";
 export { suppliersApi, toSupplierRegistrationPayload, validateSupplierRegistration } from "./suppliers/suppliers.api";
 export type {
   SupplierIndustryCategory,
