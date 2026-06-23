@@ -1,41 +1,59 @@
-import { ChartIcon, CheckIcon, EditIcon, EyeIcon, MoreIcon, SparklesIcon, FlagIcon } from "@/components/icons";
+import { useEffect, useRef, useState } from "react";
+import { CheckIcon, EditIcon, EyeIcon, MoreIcon, SparklesIcon, FlagIcon, FilterIcon } from "@/components/icons";
 import type { Product } from "@/components/builder/products/data";
 
-const statusLabels = {
-  Verified: "Verified & live",
-  "AI mapped": "AI mapped",
-  Flagged: "Flagged",
-  Draft: "Draft",
-};
-
-export function ProductCard({ product, onAction }: { product: Product; onAction: (action: string) => void }) {
+export function ProductCard({
+  product,
+  onEditRequest,
+  onViewRequest,
+  onMapRequest,
+  onStatusRequest,
+}: {
+  product: Product;
+  onEditRequest: (product: Product) => void;
+  onViewRequest: (product: Product) => void;
+  onMapRequest: (product: Product) => void;
+  onStatusRequest: (product: Product) => void;
+}) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const statusClass = product.status.toLowerCase().replace(" ", "-");
 
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, []);
+
   return (
-    <article className={`product-card ${statusClass}`}>
+    <article className={`product-card ${statusClass}`} ref={menuRef}>
       <div className="product-card-image" style={{ backgroundImage: `url("${product.image}")`, backgroundPosition: product.imagePosition }}>
-        <span>{product.status}</span>
-        <button aria-label={`More options for ${product.name}`} onClick={() => onAction(`Opened menu for ${product.name}`)} type="button"><MoreIcon size={17} /></button>
+        <span className={`product-card-status ${statusClass}`}>
+          <StatusIcon status={product.status} />
+          {product.status}
+        </span>
+        <button aria-label={`More options for ${product.name}`} onClick={() => setIsMenuOpen((current) => !current)} type="button"><MoreIcon size={17} /></button>
       </div>
+      {isMenuOpen ? (
+        <div className="product-card-menu" role="menu">
+          <button onClick={() => { onViewRequest(product); setIsMenuOpen(false); }} type="button"><EyeIcon size={14} /> View</button>
+          <button onClick={() => { onEditRequest(product); setIsMenuOpen(false); }} type="button"><EditIcon size={14} /> Edit</button>
+          {product.status === "Flagged" ? (
+            <button onClick={() => { onMapRequest(product); setIsMenuOpen(false); }} type="button"><SparklesIcon size={14} /> Map</button>
+          ) : null}
+          <button onClick={() => { onStatusRequest(product); setIsMenuOpen(false); }} type="button"><FilterIcon size={14} /> Update status</button>
+        </div>
+      ) : null}
       <div className="product-card-body">
         <h3>{product.name}</h3>
         <p>{product.supplier}</p>
         <small>{product.room} <b>&bull;</b> {product.category}</small>
-        <em><StatusIcon status={product.status} /> {statusLabels[product.status]}</em>
       </div>
-      <footer>
-        <button onClick={() => onAction(`Viewing ${product.name}`)} type="button"><EyeIcon size={14} /> View</button>
-        <button onClick={() => onAction(`Editing ${product.name}`)} type="button"><EditIcon size={14} /> Edit</button>
-        {product.status === "Flagged" ? (
-          <>
-            <button onClick={() => onAction(`Mapping ${product.name}`)} type="button"><SparklesIcon size={14} /> Map product</button>
-            <button onClick={() => onAction(`Reviewing ${product.name}`)} type="button"><FlagIcon size={14} /> Review</button>
-          </>
-        ) : (
-          <button onClick={() => onAction(`Opening analytics for ${product.name}`)} type="button"><ChartIcon size={14} /> Analytics</button>
-        )}
-        <button aria-label={`More actions for ${product.name}`} onClick={() => onAction(`Opened actions for ${product.name}`)} type="button"><MoreIcon size={14} /></button>
-      </footer>
     </article>
   );
 }

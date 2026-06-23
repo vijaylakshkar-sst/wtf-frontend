@@ -121,7 +121,7 @@ const CustomSelect = ({
   menuPlacement?: "down" | "up";
   name: string;
   onChange: (value: string) => void;
-  options: SelectOption[];
+  options: ReadonlyArray<SelectOption>;
   placeholder: string;
   value: string;
 }) => {
@@ -184,9 +184,9 @@ export function AdminContactEnquiriesPage() {
   const [enquiries, setEnquiries] = useState<ContactEnquiry[]>([]);
   const [stats, setStats] = useState<ContactEnquiryStats>(emptyStats);
   const [searchQuery, setSearchQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState<ContactEnquiryType | "">("");
+  const [priorityFilter, setPriorityFilter] = useState<ContactEnquiryPriority | "">("");
+  const [statusFilter, setStatusFilter] = useState<ContactEnquiryStatus | "">("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
   const [totalPages, setTotalPages] = useState(1);
@@ -459,7 +459,7 @@ export function AdminContactEnquiriesPage() {
               ariaLabel="Filter by enquiry type"
               name="typeFilter"
               onChange={(value) => {
-                setTypeFilter(value);
+                setTypeFilter(value as ContactEnquiryType | "");
                 setPage(1);
               }}
               options={ENQUIRY_TYPE_OPTIONS}
@@ -473,7 +473,7 @@ export function AdminContactEnquiriesPage() {
               ariaLabel="Filter by priority"
               name="priorityFilter"
               onChange={(value) => {
-                setPriorityFilter(value);
+                setPriorityFilter(value as ContactEnquiryPriority | "");
                 setPage(1);
               }}
               options={PRIORITY_OPTIONS}
@@ -487,7 +487,7 @@ export function AdminContactEnquiriesPage() {
               ariaLabel="Filter by status"
               name="statusFilter"
               onChange={(value) => {
-                setStatusFilter(value);
+                setStatusFilter(value as ContactEnquiryStatus | "");
                 setPage(1);
               }}
               options={STATUS_OPTIONS}

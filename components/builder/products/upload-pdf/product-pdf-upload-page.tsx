@@ -15,7 +15,7 @@ import { pdfWorkflowSteps } from "@/components/builder/products/upload-pdf/workf
 
 export function ProductPdfUploadPage() {
   const [activeStep, setActiveStep] = useState(0);
-  const [notice, setNotice] = useState("Upload a product guide, invoice or spec sheet to begin extraction.");
+  const [notice, setNotice] = useState("Upload a color selection guide, invoice or spec sheet to begin extraction.");
   const currentStep = pdfWorkflowSteps[activeStep];
 
   return (

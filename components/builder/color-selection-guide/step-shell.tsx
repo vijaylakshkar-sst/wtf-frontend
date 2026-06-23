@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
-import type { productGuideSteps } from "@/components/builder/product-guide/workflow-data";
+import { colorSelectionGuideSteps } from "@/components/builder/color-selection-guide/workflow-data";
 
 type StepShellProps = {
-  step: (typeof productGuideSteps)[number];
+  step: (typeof colorSelectionGuideSteps)[number];
   children: ReactNode;
 };
 
-export function StepShell({ step, children }: StepShellProps) {
+export function ColorSelectionGuideStepShell({ step, children }: StepShellProps) {
   const Icon = step.icon;
 
   return (

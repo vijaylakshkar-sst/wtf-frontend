@@ -16,6 +16,22 @@ export function SupplierProductManagementPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [notice, setNotice] = useState("Supplier product library ready.");
 
+  const handleViewRequest = (product: (typeof initialProducts)[number]) => {
+    setNotice(`Viewing ${product.name}.`);
+  };
+
+  const handleEditRequest = (product: (typeof initialProducts)[number]) => {
+    setNotice(`Editing ${product.name}.`);
+  };
+
+  const handleMapRequest = (product: (typeof initialProducts)[number]) => {
+    setNotice(`Mapping ${product.name}.`);
+  };
+
+  const handleStatusRequest = (product: (typeof initialProducts)[number]) => {
+    setNotice(`Updating status for ${product.name}.`);
+  };
+
   const visibleProducts = useMemo(() => {
     const filtered = products.filter((product) => {
       const matchesCategory = activeCategory === "All products" || product.category === activeCategory;
@@ -65,7 +81,16 @@ export function SupplierProductManagementPage() {
             </div>
           </header>
           <div className={`product-cards ${viewMode}`}>
-            {visibleProducts.map((product) => <ProductCard key={product.id} product={product} onAction={setNotice} />)}
+            {visibleProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                onEditRequest={handleEditRequest}
+                onMapRequest={handleMapRequest}
+                onStatusRequest={handleStatusRequest}
+                onViewRequest={handleViewRequest}
+                product={product}
+              />
+            ))}
           </div>
         </section>
         <p className="product-notice" role="status">{notice}</p>

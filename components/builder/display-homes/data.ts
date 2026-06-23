@@ -18,3 +18,15 @@ export const homeActivity = [
   ["Selections exported for Hoppers Crossing - The Delray", "by Jane Smith", "Yesterday"],
   ["Display home \"Werribee 28 - The Aspen\" is under review", "by Admin", "2 days ago"],
 ] as const;
+
+export type DisplayHome = (typeof displayHomes)[number];
+
+export const displayHomeSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+export const findDisplayHomeBySlug = (slug: string) =>
+  displayHomes.find((home) => displayHomeSlug(home.name) === slug);

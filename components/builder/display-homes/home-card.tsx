@@ -1,16 +1,54 @@
-import { ChartIcon, EditIcon, EyeIcon, MapPinIcon, MoreIcon } from "@/components/icons";
-import type { displayHomes } from "@/components/builder/display-homes/data";
+"use client";
 
-type DisplayHome = (typeof displayHomes)[number];
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { EditIcon, EyeIcon, MapPinIcon, MoreIcon } from "@/components/icons";
+import { displayHomeSlug, type DisplayHome } from "@/components/builder/display-homes/data";
 
 export function HomeCard({ home }: { home: DisplayHome }) {
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const statusClass = home.status.toLowerCase().replace(" ", "-");
+
+  useEffect(() => {
+    const closeMenu = (event: PointerEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", closeMenu);
+
+    return () => document.removeEventListener("pointerdown", closeMenu);
+  }, []);
 
   return (
     <article className="home-card">
       <div className="home-image" style={{ backgroundImage: `url("${home.image}")`, backgroundPosition: home.position }}>
         <span className={`home-status ${statusClass}`}>{home.status}</span>
-        <button aria-label={`More options for ${home.name}`}><MoreIcon size={17} /></button>
+        <div className="home-actions" ref={menuRef}>
+          <button
+            aria-expanded={isMenuOpen}
+            aria-haspopup="menu"
+            aria-label={`More options for ${home.name}`}
+            className="home-more-button"
+            onClick={() => setIsMenuOpen((current) => !current)}
+            type="button"
+          >
+            <MoreIcon size={17} />
+          </button>
+          {isMenuOpen ? (
+            <div className="home-action-menu" role="menu">
+              <button onClick={() => { setIsMenuOpen(false); router.push("/builder/display-homes/create"); }} role="menuitem" type="button">
+                <EditIcon size={15} /> Edit
+              </button>
+              <button onClick={() => { setIsMenuOpen(false); router.push(`/builder/display-homes/${displayHomeSlug(home.name)}`); }} role="menuitem" type="button">
+                <EyeIcon size={15} /> Preview
+              </button>
+            </div>
+          ) : null}
+        </div>
       </div>
       <div className="home-card-body">
         <h2>{home.name}</h2>
@@ -23,12 +61,6 @@ export function HomeCard({ home }: { home: DisplayHome }) {
         <div className="home-progress-copy"><span>Tagged products<strong>{home.products}</strong></span><span>Setup completion<strong>{home.completion}%</strong></span></div>
         <div className="home-progress"><i style={{ width: `${home.completion}%` }} /></div>
       </div>
-      <footer>
-        <a href="#"><ChartIcon size={14} /> Analytics</a>
-        <a href="#"><EditIcon size={14} /> Edit</a>
-        <a href="#"><EyeIcon size={14} /> Preview</a>
-        <button aria-label={`More actions for ${home.name}`}><MoreIcon size={15} /></button>
-      </footer>
     </article>
   );
 }

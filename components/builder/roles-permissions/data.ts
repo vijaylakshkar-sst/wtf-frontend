@@ -15,7 +15,7 @@ export const permissionActions: { key: BuilderPermissionAction; label: string }[
 export const builderModuleOrder = [
   { key: "dashboard", name: "Dashboard", description: "Overview metrics and builder activity" },
   { key: "displayHomes", name: "Display homes", description: "Homes, rooms, floor plans and QR setup" },
-  { key: "productGuide", name: "Product Guide", description: "Guided product setup and review workflow" },
+  { key: "productGuide", name: "Color Selection guide", description: "Guided colour selection setup and review workflow" },
   { key: "products", name: "Products", description: "Product library, mapping and flagged items" },
   { key: "leadsCustomers", name: "Leads & Customers", description: "Lead list, customer selections and reviews" },
   { key: "analytics", name: "Analytics", description: "Visits, conversion and product performance" },

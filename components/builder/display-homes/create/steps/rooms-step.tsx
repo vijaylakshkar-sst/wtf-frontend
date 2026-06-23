@@ -211,7 +211,7 @@ export function RoomsStep() {
       </StepShell>
 
       {modal && modal.mode !== "delete" && (
-        <div className="staff-modal-overlay" onClick={closeModal} role="presentation">
+        <div className="staff-modal-overlay create-home-room-modal-overlay" onClick={closeModal} role="presentation">
           <section
             aria-labelledby="rooms-modal-title"
             aria-modal="true"
@@ -284,7 +284,7 @@ export function RoomsStep() {
       )}
 
       {modal?.mode === "delete" && currentRoom && (
-        <div className="staff-modal-overlay" onClick={closeModal} role="presentation">
+        <div className="staff-modal-overlay create-home-room-modal-overlay" onClick={closeModal} role="presentation">
           <section
             aria-labelledby="delete-room-title"
             aria-modal="true"

@@ -5,6 +5,7 @@ import { ClockIcon, PhoneIcon } from "@/components/icons";
 import { Field, SectionCard } from "@/components/builder/display-homes/create/form-controls";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
 import { createDisplayHomeSteps } from "@/components/builder/display-homes/create/workflow-data";
+import { ThemedMultiSelect } from "@/components/themed-multi-select";
 
 type DetailsStepProps = {
   onValidityChange?: (isValid: boolean) => void;
@@ -134,7 +135,7 @@ export function DetailsStep({ onValidityChange, validationAttempt = 0 }: Details
   const [displayName, setDisplayName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [salesConsultant, setSalesConsultant] = useState("");
+  const [salesConsultants, setSalesConsultants] = useState<string[]>([]);
   const [monFri, setMonFri] = useState("09:00");
   const [monFriClose, setMonFriClose] = useState("18:00");
   const [saturday, setSaturday] = useState("09:00");
@@ -142,14 +143,21 @@ export function DetailsStep({ onValidityChange, validationAttempt = 0 }: Details
   const [sunday, setSunday] = useState("09:00");
   const [sundayClose, setSundayClose] = useState("18:00");
 
+  const salesConsultantOptions = [
+    { label: "Jane Smith", value: "Jane Smith" },
+    { label: "Alex Warren", value: "Alex Warren" },
+    { label: "Priya Shah", value: "Priya Shah" },
+    { label: "Daniel Moore", value: "Daniel Moore" },
+  ];
+
   const shouldShowValidation = validationAttempt > 0;
 
   const fieldErrors = useMemo(() => ({
     displayName: displayName.trim() ? "" : "Display home name is required.",
     phone: phone.trim() ? "" : "Phone number is required.",
     address: address.trim() ? "" : "Street address is required.",
-    salesConsultant: salesConsultant ? "" : "Please select a sales consultant.",
-  }), [address, displayName, phone, salesConsultant]);
+    salesConsultant: salesConsultants.length > 0 ? "" : "Please select at least one sales consultant.",
+  }), [address, displayName, phone, salesConsultants.length]);
 
   const rangeErrors = useMemo(() => ({
     monFri: getRangeError(monFri, monFriClose),
@@ -215,11 +223,13 @@ export function DetailsStep({ onValidityChange, validationAttempt = 0 }: Details
             </div>
           </div>
           <Field className={shouldShowValidation && fieldErrors.salesConsultant ? "invalid" : ""} label="Sales consultant">
-            <select value={salesConsultant} onChange={(event) => setSalesConsultant(event.target.value)}>
-              <option value="">Select sales consultant</option>
-              <option value="Jane Smith">Jane Smith</option>
-              <option value="Alex Warren">Alex Warren</option>
-            </select>
+            <ThemedMultiSelect
+              ariaLabel="Select sales consultant"
+              onChange={setSalesConsultants}
+              options={salesConsultantOptions}
+              placeholder="Select sales consultant(s)"
+              value={salesConsultants}
+            />
             <p className="create-home-field-error" aria-hidden={!shouldShowValidation || !fieldErrors.salesConsultant}>{shouldShowValidation ? fieldErrors.salesConsultant || "\u00A0" : "\u00A0"}</p>
           </Field>
         </div>

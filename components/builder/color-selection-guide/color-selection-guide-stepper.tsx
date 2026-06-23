@@ -1,11 +1,11 @@
-import { productGuideSteps, type ProductGuideStepId } from "@/components/builder/product-guide/workflow-data";
+import { colorSelectionGuideSteps, type ColorSelectionGuideStepId } from "@/components/builder/color-selection-guide/workflow-data";
 
-export function ProductGuideStepper({ activeStep }: { activeStep: ProductGuideStepId }) {
-  const activeIndex = productGuideSteps.findIndex((step) => step.id === activeStep);
+export function ColorSelectionGuideStepper({ activeStep }: { activeStep: ColorSelectionGuideStepId }) {
+  const activeIndex = colorSelectionGuideSteps.findIndex((step) => step.id === activeStep);
 
   return (
-    <nav className="create-home-stepper" aria-label="Product guide steps">
-      {productGuideSteps.map((step, index) => {
+    <nav className="create-home-stepper" aria-label="Color Selection guide steps">
+      {colorSelectionGuideSteps.map((step, index) => {
         const isActive = step.id === activeStep;
         const isComplete = index < activeIndex;
         return (
@@ -18,7 +18,7 @@ export function ProductGuideStepper({ activeStep }: { activeStep: ProductGuideSt
           >
             <span className="create-home-step-dot">{isComplete ? "\u2713" : step.shortLabel}</span>
             <span className="create-home-step-label">{step.title}</span>
-            {index < productGuideSteps.length - 1 ? <i aria-hidden="true" /> : null}
+            {index < colorSelectionGuideSteps.length - 1 ? <i aria-hidden="true" /> : null}
           </button>
         );
       })}

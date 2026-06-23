@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BuilderShell } from "@/components/builder/builder-shell";
 import { BookOpenIcon, BoxIcon, CheckIcon, ClipboardIcon, EditIcon, HomeIcon, SparklesIcon, TagIcon, UploadIcon, XIcon } from "@/components/icons";
+import { useToast } from "@/components/toast-provider";
 import { supplierProductCatalog } from "@/components/builder/products/data";
 import { PdfPanel } from "@/components/builder/products/upload-pdf/pdf-panel";
 import { VerifyEditStep } from "@/components/builder/products/upload-pdf/steps/verify-edit-step";
@@ -22,10 +23,11 @@ const initialForm = {
 
 export function AddProductPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [form, setForm] = useState(initialForm);
   const [notice, setNotice] = useState("Manual product form ready.");
   const [source, setSource] = useState<"own" | "supplier">("own");
-  const [ownMode, setOwnMode] = useState<"manual" | "csv" | "invoice">("manual");
+  const [ownMode, setOwnMode] = useState<"manual" | "invoice">("manual");
   const [uploadStage, setUploadStage] = useState<"form" | "processing" | "results" | "verify" | "published">("form");
   const [submissionView, setSubmissionView] = useState<"none" | "draft" | "published">("none");
   const [processingStep, setProcessingStep] = useState(0);
@@ -33,7 +35,9 @@ export function AddProductPage() {
   const [manualImageName, setManualImageName] = useState<string>("");
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>(supplierProductCatalog[0].id);
   const [selectedProductCode, setSelectedProductCode] = useState<string>(supplierProductCatalog[0].products[0].code);
+  const [blockedAction, setBlockedAction] = useState<"save" | "publish" | null>(null);
   const uploadTimerRef = useRef<number | null>(null);
+  const blockedActionTimerRef = useRef<number | null>(null);
   const manualImageInputRef = useRef<HTMLInputElement | null>(null);
   const completionState =
     submissionView === "draft"
@@ -66,15 +70,12 @@ export function AddProductPage() {
 
   useEffect(() => {
     if (uploadStage !== "processing") {
-      setProcessingStep(0);
       if (uploadTimerRef.current) {
         window.clearInterval(uploadTimerRef.current);
         uploadTimerRef.current = null;
       }
       return;
     }
-
-    setProcessingStep(0);
 
     if (uploadTimerRef.current) {
       window.clearInterval(uploadTimerRef.current);
@@ -116,6 +117,22 @@ export function AddProductPage() {
     setSubmissionView("published");
   }
 
+  function requireExtractionFirst() {
+    setNotice("Please click Upload & start AI extraction first.");
+    showToast("Please click Upload & start AI extraction first.", "error");
+  }
+
+  function pulseBlockedAction(action: "save" | "publish") {
+    setBlockedAction(action);
+    if (blockedActionTimerRef.current) {
+      window.clearTimeout(blockedActionTimerRef.current);
+    }
+    blockedActionTimerRef.current = window.setTimeout(() => {
+      setBlockedAction(null);
+      blockedActionTimerRef.current = null;
+    }, 450);
+  }
+
   function chooseSupplier(supplierId: string) {
     const supplier = supplierProductCatalog.find((item) => item.id === supplierId) ?? supplierProductCatalog[0];
     setSelectedSupplierId(supplier.id);
@@ -143,6 +160,9 @@ export function AddProductPage() {
     return () => {
       if (manualImagePreview) {
         URL.revokeObjectURL(manualImagePreview);
+      }
+      if (blockedActionTimerRef.current) {
+        window.clearTimeout(blockedActionTimerRef.current);
       }
     };
   }, [manualImagePreview]);
@@ -187,9 +207,6 @@ export function AddProductPage() {
                 <button className={ownMode === "manual" ? "active" : ""} onClick={() => setOwnMode("manual")} type="button">
                   <ClipboardIcon size={18} /> Manual add
                 </button>
-                <button className={ownMode === "csv" ? "active" : ""} onClick={() => setOwnMode("csv")} type="button">
-                  <UploadIcon size={18} /> CSV
-                </button>
                 <button className={ownMode === "invoice" ? "active" : ""} onClick={() => setOwnMode("invoice")} type="button">
                   <UploadIcon size={18} /> Invoice
                 </button>
@@ -207,20 +224,20 @@ export function AddProductPage() {
                     <option>Hoppers Crossing - The Delray</option>
                   </select>
                 </label>
-             </section>
+              </section>
               <section className="manual-product-section manual-product-upload-panel">
-                <h3>Upload your {ownMode === "csv" ? "CSV" : "invoice"}</h3>                
+                <h3>Upload your invoice</h3>                
                 
-                <p className="manual-product-upload-subtitle">Upload your {ownMode === "csv" ? "CSV" : "invoice"} to start extraction.</p>
+                <p className="manual-product-upload-subtitle">Upload your invoice to start extraction.</p>
 
                 <button className="manual-product-upload-dropzone" onClick={() => setNotice("File picker opened.")} type="button">
                   <UploadIcon size={30} />
-                  <strong>Drag & drop your {ownMode === "csv" ? "CSV" : "invoice"}</strong>
-                  <small>{ownMode === "csv" ? "CSV file" : "Invoice file"}</small>
+                  <strong>Drag & drop your invoice</strong>
+                  <small>Invoice file</small>
                   <em>Browse file</em>
                 </button>               
 
-                <button className="manual-product-upload-primary" onClick={() => setUploadStage("processing")} type="button">
+                <button className="manual-product-upload-primary" onClick={() => { setProcessingStep(0); setUploadStage("processing"); }} type="button">
                   <SparklesIcon size={15} /> Upload & start AI extraction
                 </button>
               </section>
@@ -233,7 +250,7 @@ export function AddProductPage() {
                 <span>02</span>
                 <div>
                   <h3>AI is reading your PDF</h3>
-                  <p>Whitmore product guide.pdf - 14 pages</p>
+                  <p>Whitmore color selection guide.pdf - 14 pages</p>
                 </div>
               </header>
 
@@ -408,8 +425,36 @@ export function AddProductPage() {
           {submissionView === "none" && !(source === "own" && ownMode !== "manual" && (uploadStage === "results" || uploadStage === "verify")) ? (
             <footer className="manual-product-footer">
               <button onClick={() => router.push("/builder/products")} type="button"><span aria-hidden="true">&#8592;</span> Back</button>
-              <button onClick={() => saveDraft(source === "supplier" ? `${selectedSupplierProduct.name} saved as draft.` : "Your product saved as draft.")} type="button"><ClipboardIcon size={19} /> Save as draft</button>
-              <button className="primary" onClick={publishProduct} type="button"><CheckIcon size={19} /> Publish</button>
+              <button
+                className={blockedAction === "save" ? "is-pulsing" : ""}
+                onClick={() => {
+                  if (source === "own" && ownMode === "invoice" && uploadStage === "form") {
+                    pulseBlockedAction("save");
+                    requireExtractionFirst();
+                    return;
+                  }
+
+                  saveDraft(source === "supplier" ? `${selectedSupplierProduct.name} saved as draft.` : "Your product saved as draft.");
+                }}
+                type="button"
+              >
+                <ClipboardIcon size={19} /> Save as draft
+              </button>
+              <button
+                className={`primary ${blockedAction === "publish" ? "is-pulsing" : ""}`}
+                onClick={() => {
+                  if (source === "own" && ownMode === "invoice" && uploadStage === "form") {
+                    pulseBlockedAction("publish");
+                    requireExtractionFirst();
+                    return;
+                  }
+
+                  publishProduct();
+                }}
+                type="button"
+              >
+                <CheckIcon size={19} /> Publish
+              </button>
             </footer>
           ) : null}
           {submissionView === "none" ? <p className="manual-product-page-notice" role="status">{notice}</p> : null}

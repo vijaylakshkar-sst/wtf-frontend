@@ -57,13 +57,10 @@ export const analyticsByYear: Record<AnalyticsYear, AnalyticsDataset> = {
       { label: "Selections submitted", value: "14", change: "6%", iconTone: "gold" },
     ],
     visitsByDay: [
-      { label: "6 May", value: 172 }, { label: "7 May", value: 158 }, { label: "8 May", value: 268 },
-      { label: "9 May", value: 174 }, { label: "10 May", value: 181 }, { label: "11 May", value: 108 },
-      { label: "12 May", value: 118 }, { label: "13 May", value: 132 }, { label: "14 May", value: 164 },
-      { label: "15 May", value: 114 }, { label: "16 May", value: 119 }, { label: "17 May", value: 105 },
-      { label: "18 May", value: 158 }, { label: "19 May", value: 205 }, { label: "20 May", value: 111 },
-      { label: "21 May", value: 164 }, { label: "22 May", value: 163 }, { label: "23 May", value: 129 },
-      { label: "24 May", value: 204 }, { label: "25 May", value: 155 }, { label: "26 May", value: 115 },
+      { label: "Jan", value: 172 }, { label: "Feb", value: 158 }, { label: "Mar", value: 268 },
+      { label: "Apr", value: 174 }, { label: "May", value: 181 }, { label: "Jun", value: 108 },
+      { label: "Jul", value: 118 }, { label: "Aug", value: 132 }, { label: "Sep", value: 164 },
+      { label: "Oct", value: 114 }, { label: "Nov", value: 119 }, { label: "Dec", value: 105 },
     ],
     funnelRows: [
       { label: "Visit -> Lead", value: "7.1%", width: 35, tone: "blue" },

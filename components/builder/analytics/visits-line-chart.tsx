@@ -12,13 +12,10 @@ export function VisitsLineChart({ selectedYear, visits }: { selectedYear: Analyt
     return `${x},${y}`;
   }).join(" ");
 
-  const labelInterval = selectedYear === "2026" ? 2 : 1;
-
   return (
     <section className="analytics-card analytics-chart-card">
       <header>
-        <h2>Visits by day</h2>
-        <button type="button">Visits <span>v</span></button>
+        <h2>Visits by month</h2>
       </header>
       <div className="analytics-line-chart">
         <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-label={`Visits chart for ${selectedYear}`}>
@@ -29,7 +26,7 @@ export function VisitsLineChart({ selectedYear, visits }: { selectedYear: Analyt
           <polyline points={points} />
         </svg>
         <div className="analytics-chart-days">
-          {visits.filter((_, index) => index % labelInterval === 0).map((point) => <span key={point.label}>{point.label}</span>)}
+          {visits.map((point) => <span key={point.label}>{point.label}</span>)}
         </div>
       </div>
     </section>

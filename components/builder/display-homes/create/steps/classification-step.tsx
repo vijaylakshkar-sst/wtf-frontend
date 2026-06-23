@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Field, SectionCard, ToggleRow } from "@/components/builder/display-homes/create/form-controls";
 import { createDisplayHomeSteps, targetMarkets } from "@/components/builder/display-homes/create/workflow-data";
 import { StepShell } from "@/components/builder/display-homes/create/step-shell";
+import { ThemedSelect } from "@/components/themed-select";
 
 type ClassificationStepProps = {
   onValidityChange?: (isValid: boolean) => void;
@@ -52,20 +53,32 @@ export function ClassificationStep({ onValidityChange, validationAttempt = 0 }: 
       <SectionCard title="Classification">
         <div className="create-home-form-grid two">
           <Field className={shouldShowValidation && validationErrors.storeyType ? "invalid" : ""} label="Storey type">
-            <select value={storeyType} onChange={(event) => setStoreyType(event.target.value)}>
-              <option value="" disabled>Select storey type</option>
-              <option value="Single storey">Single storey</option>
-              <option value="Double storey">Double storey</option>
-            </select>
+            <ThemedSelect
+              ariaLabel="Select storey type"
+              className="create-home-themed-select"
+              onChange={setStoreyType}
+              options={[
+                { label: "Single storey", value: "Single storey" },
+                { label: "Double storey", value: "Double storey" },
+              ]}
+              placeholder="Select storey type"
+              value={storeyType}
+            />
             <p className="create-home-field-error" aria-hidden={!shouldShowValidation || !validationErrors.storeyType}>{shouldShowValidation ? validationErrors.storeyType || "\u00A0" : "\u00A0"}</p>
           </Field>
           <Field className={shouldShowValidation && validationErrors.designStyle ? "invalid" : ""} label="Design style">
-            <select value={designStyle} onChange={(event) => setDesignStyle(event.target.value)}>
-              <option value="" disabled>Select design style</option>
-              <option value="Hamptons">Hamptons</option>
-              <option value="Contemporary">Contemporary</option>
-              <option value="Scandinavian">Scandinavian</option>
-            </select>
+            <ThemedSelect
+              ariaLabel="Select design style"
+              className="create-home-themed-select"
+              onChange={setDesignStyle}
+              options={[
+                { label: "Hamptons", value: "Hamptons" },
+                { label: "Contemporary", value: "Contemporary" },
+                { label: "Scandinavian", value: "Scandinavian" },
+              ]}
+              placeholder="Select design style"
+              value={designStyle}
+            />
             <p className="create-home-field-error" aria-hidden={!shouldShowValidation || !validationErrors.designStyle}>{shouldShowValidation ? validationErrors.designStyle || "\u00A0" : "\u00A0"}</p>
           </Field>
         </div>

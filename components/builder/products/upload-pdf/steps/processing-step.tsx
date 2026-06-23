@@ -4,7 +4,7 @@ import { extractionTasks } from "@/components/builder/products/upload-pdf/workfl
 
 export function ProcessingStep() {
   return (
-    <PdfPanel index="02" title="AI is reading your PDF" subtitle="Whitmore product guide.pdf - 14 pages">
+    <PdfPanel index="02" title="AI is reading your PDF" subtitle="Whitmore color selection guide.pdf - 14 pages">
       <div className="pdf-task-list">
         {extractionTasks.map((task) => <article className={task.tone} key={task.label}><CheckIcon size={15} /><span>{task.label}</span><strong>{task.status}</strong></article>)}
       </div>

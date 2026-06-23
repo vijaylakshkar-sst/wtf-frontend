@@ -940,7 +940,7 @@ export function AiColourCombinationReviewStep() {
               AI Extracted
             </span>
           </div>
-          <p>Customise your selections from the product guide.</p>
+          <p>Customise your selections from the color selection guide.</p>
         </div>
       </header>
 

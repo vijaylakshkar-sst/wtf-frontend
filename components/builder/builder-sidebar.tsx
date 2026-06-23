@@ -19,7 +19,7 @@ export function BuilderSidebar({ isOpen }: { isOpen: boolean }) {
         <small>Main</small>
         {can(["dashboard.view"]) ? <Link className={pathname === "/builder" ? "active" : ""} href="/builder"><GridIcon size={18} /> Dashboard</Link> : null}
         {can(["displayHomes.view"]) ? <Link className={pathname.startsWith("/builder/display-homes") ? "active" : ""} href="/builder/display-homes"><HomeIcon size={18} /> Display homes</Link> : null}
-        {can(["productGuide.view"]) ? <Link className={pathname.startsWith("/builder/product-guide") ? "active" : ""} href="/builder/product-guide"><FileIcon size={18} /> Product Guide</Link> : null}
+        {can(["productGuide.view"]) ? <Link className={pathname.startsWith("/builder/color-selection-guide") ? "active" : ""} href="/builder/color-selection-guide"><FileIcon size={18} /> Color Selection guide</Link> : null}
         {can(["products.view"]) ? <Link className={pathname.startsWith("/builder/products") ? "active" : ""} href="/builder/products"><BoxIcon size={18} /> Products</Link> : null}
         {/* {pathname.startsWith("/builder/products") ? (
           <div className="builder-subnav">

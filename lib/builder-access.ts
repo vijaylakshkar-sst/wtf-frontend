@@ -34,7 +34,7 @@ export type BuilderPermissionKey =
 
 const builderRoutePermissions: Array<{ prefix: string; permissions: BuilderPermissionKey[] }> = [
   { prefix: "/builder/display-homes", permissions: ["displayHomes.view"] },
-  { prefix: "/builder/product-guide", permissions: ["productGuide.view"] },
+  { prefix: "/builder/color-selection-guide", permissions: ["productGuide.view"] },
   { prefix: "/builder/products", permissions: ["products.view"] },
   { prefix: "/builder/leads", permissions: ["leadsCustomers.view"] },
   { prefix: "/builder/analytics", permissions: ["analytics.view"] },
