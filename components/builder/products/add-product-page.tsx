@@ -25,16 +25,16 @@ export function AddProductPage() {
   const router = useRouter();
   const { showToast } = useToast();
   const [form, setForm] = useState(initialForm);
-  const [notice, setNotice] = useState("Manual product form ready.");
+  const [notice, setNotice] = useState("Upload a PDF, image or invoice to begin extraction.");
   const [source, setSource] = useState<"own" | "supplier">("own");
-  const [ownMode, setOwnMode] = useState<"manual" | "invoice">("manual");
+  const [ownMode, setOwnMode] = useState<"manual" | "invoice">("invoice");
   const [uploadStage, setUploadStage] = useState<"form" | "processing" | "results" | "verify" | "published">("form");
   const [submissionView, setSubmissionView] = useState<"none" | "draft" | "published">("none");
   const [processingStep, setProcessingStep] = useState(0);
   const [manualImagePreview, setManualImagePreview] = useState<string>("");
   const [manualImageName, setManualImageName] = useState<string>("");
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>(supplierProductCatalog[0].id);
-  const [selectedProductCode, setSelectedProductCode] = useState<string>(supplierProductCatalog[0].products[0].code);
+  const [selectedProductCodes, setSelectedProductCodes] = useState<string[]>([supplierProductCatalog[0].products[0].code]);
   const [blockedAction, setBlockedAction] = useState<"save" | "publish" | null>(null);
   const uploadTimerRef = useRef<number | null>(null);
   const blockedActionTimerRef = useRef<number | null>(null);
@@ -66,7 +66,7 @@ export function AddProductPage() {
           }
         : null;
   const selectedSupplier = supplierProductCatalog.find((supplier) => supplier.id === selectedSupplierId) ?? supplierProductCatalog[0];
-  const selectedSupplierProduct = selectedSupplier.products.find((product) => product.code === selectedProductCode) ?? selectedSupplier.products[0];
+  const selectedSupplierProducts = selectedSupplier.products.filter((product) => selectedProductCodes.includes(product.code));
 
   useEffect(() => {
     if (uploadStage !== "processing") {
@@ -112,8 +112,8 @@ export function AddProductPage() {
     setSubmissionView("draft");
   }
 
-  function publishProduct() {
-    setNotice("Product published successfully.");
+  function publishProduct(message = "Product published successfully.") {
+    setNotice(message);
     setSubmissionView("published");
   }
 
@@ -136,8 +136,22 @@ export function AddProductPage() {
   function chooseSupplier(supplierId: string) {
     const supplier = supplierProductCatalog.find((item) => item.id === supplierId) ?? supplierProductCatalog[0];
     setSelectedSupplierId(supplier.id);
-    setSelectedProductCode(supplier.products[0].code);
+    setSelectedProductCodes([supplier.products[0].code]);
     setNotice(`${supplier.supplier} products loaded.`);
+  }
+
+  function toggleSupplierProduct(productCode: string) {
+    setSelectedProductCodes((current) => {
+      if (current.includes(productCode)) {
+        if (current.length === 1) {
+          return current;
+        }
+
+        return current.filter((code) => code !== productCode);
+      }
+
+      return [...current, productCode];
+    });
   }
 
   function handleManualImageUpload(file?: File) {
@@ -186,10 +200,19 @@ export function AddProductPage() {
             {source === "supplier" ? (
               <div className="supplier-product-picker">
                 <ManualField icon={<BoxIcon size={20} />} label="Supplier"><select onChange={(event) => chooseSupplier(event.target.value)} value={selectedSupplierId}>{supplierProductCatalog.map((supplier) => <option key={supplier.id} value={supplier.id}>{supplier.supplier}</option>)}</select></ManualField>
-                <ManualField icon={<ClipboardIcon size={20} />} label="Supplier product"><select onChange={(event) => setSelectedProductCode(event.target.value)} value={selectedProductCode}>{selectedSupplier.products.map((product) => <option key={product.code} value={product.code}>{product.name}</option>)}</select></ManualField>
+                <div className="supplier-product-picker-note">
+                  <strong>Select multiple products</strong>
+                  <span>{selectedSupplier.products.length} products available for {selectedSupplier.supplier}.</span>
+                </div>
                 <div className="supplier-product-list">
                   {selectedSupplier.products.map((product) => (
-                    <button className={product.code === selectedProductCode ? "active" : ""} key={product.code} onClick={() => setSelectedProductCode(product.code)} type="button">
+                    <button
+                      aria-pressed={selectedProductCodes.includes(product.code)}
+                      className={selectedProductCodes.includes(product.code) ? "active" : ""}
+                      key={product.code}
+                      onClick={() => toggleSupplierProduct(product.code)}
+                      type="button"
+                    >
                       <span style={{ backgroundImage: `url("${product.image}")` }} />
                       <div><strong>{product.name}</strong><small>{product.code} &bull; {product.category} &bull; {product.room}</small></div>
                       <em>{product.price}</em>
@@ -204,11 +227,11 @@ export function AddProductPage() {
             <section className="manual-product-section">
               <h3>How would you like to add it?</h3>
               <div className="manual-product-source-toggle manual-product-source-toggle--sub">
+                <button className={ownMode === "invoice" ? "active" : ""} onClick={() => setOwnMode("invoice")} type="button">
+                  <UploadIcon size={18} /> PDF / image / invoice
+                </button>
                 <button className={ownMode === "manual" ? "active" : ""} onClick={() => setOwnMode("manual")} type="button">
                   <ClipboardIcon size={18} /> Manual add
-                </button>
-                <button className={ownMode === "invoice" ? "active" : ""} onClick={() => setOwnMode("invoice")} type="button">
-                  <UploadIcon size={18} /> Invoice
                 </button>
               </div>
             </section>
@@ -226,14 +249,14 @@ export function AddProductPage() {
                 </label>
               </section>
               <section className="manual-product-section manual-product-upload-panel">
-                <h3>Upload your invoice</h3>                
+                <h3>Upload your PDF, image or invoice</h3>
                 
-                <p className="manual-product-upload-subtitle">Upload your invoice to start extraction.</p>
+                <p className="manual-product-upload-subtitle">Upload your PDF, image or invoice to start extraction.</p>
 
                 <button className="manual-product-upload-dropzone" onClick={() => setNotice("File picker opened.")} type="button">
                   <UploadIcon size={30} />
-                  <strong>Drag & drop your invoice</strong>
-                  <small>Invoice file</small>
+                  <strong>Drag & drop your PDF, image or invoice</strong>
+                  <small>PDF, image or invoice file</small>
                   <em>Browse file</em>
                 </button>               
 
@@ -249,8 +272,8 @@ export function AddProductPage() {
               <header className="manual-product-processing-header">
                 <span>02</span>
                 <div>
-                  <h3>AI is reading your PDF</h3>
-                  <p>Whitmore color selection guide.pdf - 14 pages</p>
+                  <h3>AI is reading your file</h3>
+                  <p>Whitmore color selection guide - 14 pages</p>
                 </div>
               </header>
 
@@ -315,7 +338,7 @@ export function AddProductPage() {
                 {/* <button className="manual-product-secondary-action" onClick={() => setNotice("All products sent to verification.")} type="button">
                   <ClipboardIcon size={18} /> Send all to verification
                 </button> */}
-                <button className="manual-product-primary-action" onClick={publishProduct} type="button">
+                <button className="manual-product-primary-action" onClick={() => publishProduct()} type="button">
                   <CheckIcon size={18} /> Publish product
                 </button>
               </div>
@@ -353,6 +376,22 @@ export function AddProductPage() {
 
           {submissionView === "none" && uploadStage !== "published" && source === "own" && ownMode === "manual" ? (
             <section className="manual-product-section">
+              <h3>Product details</h3>
+              <div className="manual-product-form">
+                <ManualField icon={<ClipboardIcon size={20} />} label="Product name *"><input onChange={(event) => updateField("name", event.target.value)} placeholder="e.g. Calacatta Quartz 20mm" value={form.name} /></ManualField>
+                <ManualField icon={<TagIcon size={20} />} label="Product code"><input onChange={(event) => updateField("code", event.target.value)} placeholder="e.g. CST-CQ-20" value={form.code} /></ManualField>
+                <ManualField icon={<BoxIcon size={20} />} label="Supplier / brand"><input onChange={(event) => updateField("supplier", event.target.value)} placeholder="e.g. Caesarstone" value={form.supplier} /></ManualField>
+                <ManualField icon={<ClipboardIcon size={20} />} label="Category *"><select onChange={(event) => updateField("category", event.target.value)} value={form.category}><option>Benchtops</option><option>Flooring</option><option>Cabinetry</option><option>Tapware</option><option>Appliances</option></select></ManualField>
+                <ManualField icon={<HomeIcon size={20} />} label="Display home *"><select defaultValue="Tarneit 42 - The Whitmore"><option>Tarneit 42 - The Whitmore</option><option>Hoppers Crossing - The Delray</option></select></ManualField>
+                <ManualField icon={<BookOpenIcon size={20} />} label="Room mapping *"><select onChange={(event) => updateField("room", event.target.value)} value={form.room}><option>Kitchen</option><option>Living</option><option>Bathroom</option><option>Ensuite</option><option>Bedroom</option></select></ManualField>
+                <ManualField icon={<CheckIcon size={20} />} label="Inclusion type"><select onChange={(event) => updateField("inclusion", event.target.value)} value={form.inclusion}><option>Standard inclusion</option><option>Upgrade</option><option>Optional inclusion</option></select></ManualField>
+                <ManualField icon={<span className="manual-dollar">$</span>} label="Price (optional)"><input onChange={(event) => updateField("price", event.target.value)} placeholder="e.g. $320 / m2" value={form.price} /></ManualField>
+                <ManualField className="wide" icon={<EditIcon size={20} />} label="Product description (optional)"><textarea onChange={(event) => updateField("description", event.target.value)} placeholder="Brief description visible to display home visitors..." value={form.description} /></ManualField>
+              </div>
+            </section>
+          ) : null}
+          {submissionView === "none" && uploadStage !== "published" && source === "own" && ownMode === "manual" ? (
+            <section className="manual-product-section">
               <h3>Product image</h3>
               <div className="manual-product-image-row">
                 <button className="manual-product-upload" onClick={() => manualImageInputRef.current?.click()} type="button">
@@ -374,33 +413,20 @@ export function AddProductPage() {
               />
             </section>
           ) : null}
-
-          {submissionView === "none" && uploadStage !== "published" && source === "own" && ownMode === "manual" ? (
-            <section className="manual-product-section">
-              <h3>Product details</h3>
-              <div className="manual-product-form">
-                <ManualField icon={<ClipboardIcon size={20} />} label="Product name *"><input onChange={(event) => updateField("name", event.target.value)} placeholder="e.g. Calacatta Quartz 20mm" value={form.name} /></ManualField>
-                <ManualField icon={<TagIcon size={20} />} label="Product code"><input onChange={(event) => updateField("code", event.target.value)} placeholder="e.g. CST-CQ-20" value={form.code} /></ManualField>
-                <ManualField icon={<BoxIcon size={20} />} label="Supplier / brand"><input onChange={(event) => updateField("supplier", event.target.value)} placeholder="e.g. Caesarstone" value={form.supplier} /></ManualField>
-                <ManualField icon={<ClipboardIcon size={20} />} label="Category *"><select onChange={(event) => updateField("category", event.target.value)} value={form.category}><option>Benchtops</option><option>Flooring</option><option>Cabinetry</option><option>Tapware</option><option>Appliances</option></select></ManualField>
-                <ManualField icon={<HomeIcon size={20} />} label="Display home *"><select defaultValue="Tarneit 42 - The Whitmore"><option>Tarneit 42 - The Whitmore</option><option>Hoppers Crossing - The Delray</option></select></ManualField>
-                <ManualField icon={<BookOpenIcon size={20} />} label="Room mapping *"><select onChange={(event) => updateField("room", event.target.value)} value={form.room}><option>Kitchen</option><option>Living</option><option>Bathroom</option><option>Ensuite</option><option>Bedroom</option></select></ManualField>
-                <ManualField icon={<CheckIcon size={20} />} label="Inclusion type"><select onChange={(event) => updateField("inclusion", event.target.value)} value={form.inclusion}><option>Standard inclusion</option><option>Upgrade</option><option>Optional inclusion</option></select></ManualField>
-                <ManualField icon={<span className="manual-dollar">$</span>} label="Price (optional)"><input onChange={(event) => updateField("price", event.target.value)} placeholder="e.g. $320 / m2" value={form.price} /></ManualField>
-                <ManualField className="wide" icon={<EditIcon size={20} />} label="Product description (optional)"><textarea onChange={(event) => updateField("description", event.target.value)} placeholder="Brief description visible to display home visitors..." value={form.description} /></ManualField>
-              </div>
-            </section>
-          ) : null}
           {submissionView === "none" && uploadStage !== "published" && source === "supplier" ? (
             <section className="manual-product-section">
-              <h3>Selected supplier product</h3>
-              <div className="selected-supplier-product">
-                <span style={{ backgroundImage: `url("${selectedSupplierProduct.image}")` }} />
-                <div>
-                  <h4>{selectedSupplierProduct.name}</h4>
-                  <p>{selectedSupplier.supplier} &bull; {selectedSupplierProduct.code}</p>
-                  <small>{selectedSupplierProduct.category} &bull; Suggested room: {selectedSupplierProduct.room} &bull; {selectedSupplierProduct.price}</small>
-                </div>
+              <h3>Selected supplier products</h3>
+              <div style={{ display: "grid", gap: "12px", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+                {(selectedSupplierProducts.length ? selectedSupplierProducts : [selectedSupplier.products[0]]).map((product) => (
+                  <article className="selected-supplier-product" key={product.code}>
+                    <span style={{ backgroundImage: `url("${product.image}")` }} />
+                    <div>
+                      <h4>{product.name}</h4>
+                      <p>{selectedSupplier.supplier} &bull; {product.code}</p>
+                      <small>{product.category} &bull; Suggested room: {product.room} &bull; {product.price}</small>
+                    </div>
+                  </article>
+                ))}
               </div>
             </section>
           ) : null}
@@ -434,7 +460,11 @@ export function AddProductPage() {
                     return;
                   }
 
-                  saveDraft(source === "supplier" ? `${selectedSupplierProduct.name} saved as draft.` : "Your product saved as draft.");
+                  saveDraft(
+                    source === "supplier"
+                      ? `${selectedSupplierProducts.length} supplier product${selectedSupplierProducts.length === 1 ? "" : "s"} saved as draft.`
+                      : "Your product saved as draft.",
+                  );
                 }}
                 type="button"
               >
@@ -449,7 +479,11 @@ export function AddProductPage() {
                     return;
                   }
 
-                  publishProduct();
+                  publishProduct(
+                    source === "supplier"
+                      ? `${selectedSupplierProducts.length} supplier product${selectedSupplierProducts.length === 1 ? "" : "s"} published successfully.`
+                      : "Product published successfully.",
+                  );
                 }}
                 type="button"
               >

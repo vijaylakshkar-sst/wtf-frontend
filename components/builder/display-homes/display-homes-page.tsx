@@ -49,7 +49,7 @@ export function DisplayHomesPage() {
       { icon: HomeIcon, label: "Total homes", value: numberFormatter.format(filteredHomes.length), note: status === "All status" ? "All display homes" : `${status} homes` },
       { icon: UsersIcon, label: "Total visits (30d)", value: numberFormatter.format(totals.visits), note: filteredHomes.length ? `Across ${filteredHomes.length} homes` : "No matching homes" },
       { icon: UsersIcon, label: "Leads generated", value: numberFormatter.format(totals.leads), note: filteredHomes.length ? `Avg. completion ${averageCompletion}%` : "No matching homes" },
-      { icon: BoxIcon, label: "Products tagged", value: numberFormatter.format(totals.products), note: filteredHomes.length ? "Filtered results only" : "No matching homes" },
+      { icon: BoxIcon, label: "Products tagged", value: numberFormatter.format(totals.products), note: filteredHomes.length ? "Overall products 563" : "No matching homes" },
     ];
   }, [filteredHomes, status]);
 

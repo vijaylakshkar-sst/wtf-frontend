@@ -49,6 +49,23 @@ export const customerSelections = [
   { category: "Flooring", room: "Living", product: "Coastal Oak 6mm", type: "Standard" },
   { category: "Benchtop", room: "Kitchen", product: "Calacatta Quartz", type: "Upgrade" },
   { category: "Paint", room: "All", product: "Dulux Vivid White", type: "Standard" },
+  { category: "Cabinetry", room: "Kitchen", product: "Shaker Profile Cabinetry", type: "Standard" },
+  { category: "Tapware", room: "Bathroom", product: "Matte Black Mixer", type: "Upgrade" },
+  { category: "Flooring", room: "Bedroom", product: "Blackbutt Hybrid Plank", type: "Standard" },
+  { category: "Lighting", room: "Living", product: "Warm Pendant Set", type: "Pending" },
+  { category: "Appliances", room: "Kitchen", product: "60cm Wall Oven", type: "Upgrade" },
+  { category: "Benchtop", room: "Laundry", product: "Stone Grey Quartz", type: "Standard" },
+  { category: "Cabinetry", room: "Pantry", product: "Handle Set Satin Nickel", type: "Standard" },
+  { category: "Paint", room: "Exterior", product: "Dulux Monument", type: "Approved" },
+  { category: "Flooring", room: "Hall", product: "Coastal Oak 6mm", type: "Standard" },
+  { category: "Tapware", room: "Ensuite", product: "Brushed Brass Mixer", type: "Upgrade" },
+  { category: "Bathroom", room: "Bathroom", product: "Chrome Shower Rail", type: "Pending" },
+  { category: "Kitchen", room: "Kitchen", product: "Island Pantry System", type: "Approved" },
+  { category: "Lighting", room: "Bedroom", product: "Downlight Pack", type: "Standard" },
+  { category: "Appliances", room: "Laundry", product: "Washer Dryer Combo", type: "Upgrade" },
+  { category: "Flooring", room: "Outdoor", product: "Spotted Gum Decking", type: "Standard" },
+  { category: "Paint", room: "All", product: "Lexicon Quarter", type: "Approved" },
+  { category: "Cabinetry", room: "Living", product: "Laundry Laminate Finish", type: "Pending" },
 ] as const;
 
 export const reviewSelections = [

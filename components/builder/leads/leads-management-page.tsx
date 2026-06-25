@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { BuilderShell } from "@/components/builder/builder-shell";
-import { FileIcon, PrintIcon } from "@/components/icons";
 import { BuilderReviewStep } from "@/components/builder/leads/steps/builder-review-step";
 import { CustomerSelectionsStep } from "@/components/builder/leads/steps/customer-selections-step";
 import { LeadDetailStep } from "@/components/builder/leads/steps/lead-detail-step";
@@ -12,7 +11,7 @@ import { leads, leadsFlowSteps, type Lead } from "@/components/builder/leads/dat
 export function LeadsManagementPage() {
   const [activeLead, setActiveLead] = useState<Lead | null>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [notice, setNotice] = useState("Lead management ready.");
+  const [, setNotice] = useState("Lead management ready.");
   const selectedLead = activeLead ?? leads[0];
   const exportRows = useMemo(
     () =>
@@ -51,14 +50,6 @@ export function LeadsManagementPage() {
     window.print();
   };
 
-  function selectStep(step: number) {
-    if (step > 0 && !activeLead) {
-      setNotice("Please select a lead first.");
-      return;
-    }
-    setActiveStep(step);
-  }
-
   function goBack() {
     setActiveStep((step) => Math.max(0, step - 1));
   }
@@ -72,22 +63,12 @@ export function LeadsManagementPage() {
             <h1>Leads & Customer Selections</h1>
             <span>Lead list - Lead detail - Customer selection submission - Builder review</span>
           </div>
-          <div className="leads-page-actions">
-            <button onClick={saveAsPdf} type="button">
-              <PrintIcon size={15} />
-              Save as PDF
-            </button>
-            <button onClick={downloadCsv} type="button">
-              <FileIcon size={15} />
-              Export
-            </button>
-          </div>
         </header>
         <section className="leads-section leads-flow-section">
           <h2>{leadsFlowSteps[activeStep]}</h2>
           {activeStep === 0 ? <LeadListStep activeLead={activeLead} leads={leads} onExport={downloadCsv} onSelectLead={(lead) => { setActiveLead(lead); setActiveStep(1); setNotice(`${lead.name} selected.`); }} /> : null}
-          {activeStep === 1 && activeLead ? <LeadDetailStep lead={selectedLead} /> : null}
-          {activeStep === 2 && activeLead ? <CustomerSelectionsStep lead={selectedLead} onSave={() => setNotice("Customer selection PDF saved.")} onSubmit={() => { setNotice(`${selectedLead.name}'s selections submitted to builder.`); setActiveStep(3); }} /> : null}
+          {activeStep === 1 && activeLead ? <LeadDetailStep lead={selectedLead} onBack={() => setActiveStep(0)} onExport={downloadCsv} onSave={saveAsPdf} /> : null}
+          {activeStep === 2 && activeLead ? <CustomerSelectionsStep lead={selectedLead} onExport={downloadCsv} onSave={saveAsPdf} onSubmit={() => { setNotice(`${selectedLead.name}'s selections submitted to builder.`); setActiveStep(3); }} /> : null}
           {activeStep === 3 && activeLead ? <BuilderReviewStep lead={selectedLead} onApprove={() => setNotice(`${selectedLead.name}'s selections approved.`)} /> : null}
         </section>
         {activeStep === 2 ? (
@@ -100,7 +81,6 @@ export function LeadsManagementPage() {
             <button onClick={goBack} type="button">Back</button>
           </footer>
         ) : null}
-        <p className="leads-notice" role="status">{notice}</p>
       </section>
     </BuilderShell>
   );
